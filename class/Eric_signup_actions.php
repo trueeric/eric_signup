@@ -2,12 +2,12 @@
 // 如「模組目錄」= signup，則「首字大寫模組目錄」= Signup
 // 如「資料表名」= actions，則「模組物件」= Actions
 
-namespace XoopsModules\Eric_singup;
+namespace XoopsModules\Eric_signup;
 
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\Utility;
 
-class Eric_singup_actions
+class Eric_signup_actions
 {
     //列出所有資料
     public static function index()

@@ -5,6 +5,9 @@ if (!isset($_SESSION[$is_admin])) {
     $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;
 }
 
+// printf('$is_admin' . isset($_SESSION[$is_admin]));
+// die();
+
 // if (!isset($_SESSION['officeA'])) {
 
 //     $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;

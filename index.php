@@ -2,7 +2,7 @@
 // 如「模組目錄」= signup，則「首字大寫模組目錄」= Signup
 // 如「資料表名」= actions，則「模組物件」= Actions
 use Xmf\Request;
-use XoopsModules\Eric_singup\Eric_singup_actions;
+use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Tadtools\Utility;
 
 /*-----------引入檔案區--------------*/
@@ -18,41 +18,41 @@ $id = Request::getInt('id');
 switch ($op) {
 
     //新增表單
-    case 'eric_singup_actions_create':
-        Eric_singup_actions::create();
+    case 'eric_signup_actions_create':
+        Eric_signup_actions::create();
         break;
 
     //新增資料
-    case 'eric_singup_actions_store':
-        $id = Eric_singup_actions::store();
+    case 'eric_signup_actions_store':
+        $id = Eric_signup_actions::store();
         header("location: {$_SERVER['PHP_SELF']}?id=$id");
         exit;
 
     //修改用表單
-    case 'eric_singup_actions_edit':
-        Eric_singup_actions::create($id);
-        $op = 'eric_singup_actions_create';
+    case 'eric_signup_actions_edit':
+        Eric_signup_actions::create($id);
+        $op = 'eric_signup_actions_create';
         break;
 
     //更新資料
-    case 'eric_singup_actions_update':
-        Eric_singup_actions::update($id);
+    case 'eric_signup_actions_update':
+        Eric_signup_actions::update($id);
         header("location: {$_SERVER['PHP_SELF']}?id=$id");
         exit;
 
     //刪除資料
-    case 'eric_singup_actions_destroy':
-        Eric_singup_actions::destroy($id);
+    case 'eric_signup_actions_destroy':
+        Eric_signup_actions::destroy($id);
         header("location: {$_SERVER['PHP_SELF']}");
         exit;
 
     default:
         if (empty($id)) {
-            Eric_singup_actions::index();
-            $op = 'eric_singup_actions_index';
+            Eric_signup_actions::index();
+            $op = 'eric_signup_actions_index';
         } else {
-            Eric_singup_actions::show($id);
-            $op = 'eric_singup_actions_show';
+            Eric_signup_actions::show($id);
+            $op = 'eric_signup_actions_show';
         }
         break;
 }

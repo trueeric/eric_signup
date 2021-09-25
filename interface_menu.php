@@ -5,6 +5,11 @@ if (!isset($_SESSION[$is_admin])) {
     $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;
 }
 
+if (!isset($_SESSION['officeA'])) {
+    $
+    $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;
+}
+
 //回模組首頁
 $interface_menu[_TAD_TO_MOD] = "index.php";
 $interface_icon[_TAD_TO_MOD] = "fa-chevron-right";

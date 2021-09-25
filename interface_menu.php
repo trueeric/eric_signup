@@ -1,20 +1,16 @@
 <?php
-
-//判斷是否對該模組有管理權限
-$isAdmin = false;
-if ($xoopsUser) {
-    $module_id = $xoopsModule->getVar('mid');
-    $isAdmin   = $xoopsUser->isAdmin($module_id);
+//判斷是否對該模組有管理權限，本版開始有區分模組，$_SESSION['eric_signup_adm']
+$is_admin = basename(__DIR__) . '_adm';
+if (!isset($_SESSION[$is_admin])) {
+    $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;
 }
-
-//工具列設定
 
 //回模組首頁
 $interface_menu[_TAD_TO_MOD] = "index.php";
 $interface_icon[_TAD_TO_MOD] = "fa-chevron-right";
 
 //模組後台
-if ($isAdmin) {
+if ($_SESSION[$is_admin]) {
     $interface_menu[_TAD_TO_ADMIN] = "admin/main.php";
     $interface_icon[_TAD_TO_ADMIN] = "fa-chevron-right";
 }

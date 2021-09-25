@@ -34,8 +34,8 @@ $modversion['paypal']['currency_code'] = 'USD';
 $modversion['system_menu'] = 1;
 
 //---模組資料表架構---//
-//$modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
-//$modversion['tables'][0] = '';
+$modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
+$modversion['tables'][0]        = 'eric_signup_actions';
 
 //---後台管理介面設定---//
 $modversion['hasAdmin']   = 1;

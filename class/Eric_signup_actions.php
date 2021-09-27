@@ -5,6 +5,7 @@
 namespace XoopsModules\Eric_signup;
 
 use XoopsModules\Tadtools\FormValidator;
+use XoopsModules\Tadtools\My97DatePicker;
 use XoopsModules\Tadtools\Utility;
 
 class Eric_signup_actions
@@ -21,10 +22,15 @@ class Eric_signup_actions
     //編輯表單
     public static function create($id = '')
     {
-        global $xoopsTpl;
+        global $xoopsTpl, $xoopsUser;
+        if (!$_SESSION['eric_signup_adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "非管理員，無法執行此動作!");
+        }
 
         //抓取預設值
         $db_values = empty($id) ? [] : self::get($id);
+        $db_values = empty($id) ? 50 : $db_values['numbers'];
+        $db_values = empty($id) ? 1 : $db_values['enable'];
 
         foreach ($db_values as $col_name => $col_val) {
             $$col_name = $col_val;
@@ -43,6 +49,11 @@ class Eric_signup_actions
         $token      = new \XoopsFormHiddenToken();
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
+
+        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("uid", $uid);
+
+        My97DatePicker::render();
     }
 
     //新增資料

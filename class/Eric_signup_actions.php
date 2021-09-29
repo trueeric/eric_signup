@@ -24,13 +24,13 @@ class Eric_signup_actions
     {
         global $xoopsTpl, $xoopsUser;
         if (!$_SESSION['eric_signup_adm']) {
-            redirect_header($_SERVER['PHP_SELF'], 3, "非管理員，無法執行此動作!");
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
         //抓取預設值
-        $db_values = empty($id) ? [] : self::get($id);
-        $db_values = empty($id) ? 50 : $db_values['numbers'];
-        $db_values = empty($id) ? 1 : $db_values['enable'];
+        $db_values           = empty($id) ? [] : self::get($id);
+        $db_values['number'] = empty($id) ? 50 : $db_values['number'];
+        $db_values['enable'] = empty($id) ? 1 : $db_values['enable'];
 
         foreach ($db_values as $col_name => $col_val) {
             $$col_name = $col_val;
@@ -61,6 +61,10 @@ class Eric_signup_actions
     {
         global $xoopsDB;
 
+        if (!$_SESSION['eric_signup_adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
+
         //XOOPS表單安全檢查
         Utility::xoops_security_check();
 
@@ -69,17 +73,30 @@ class Eric_signup_actions
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
+        $uid    = (int) $uid;
+        $number = (int) $number;
+        $enable = (int) $enable;
 
         $sql = "insert into `" . $xoopsDB->prefix("eric_signup_actions") . "` (
-        `欄位1`,
-        `欄位2`,
-        `欄位3`
+        `title`,
+        `detail`,
+        `action_date`,
+        `end_date`,
+        `number`,
+        `setup`,
+        `enable`,
+        `uid`
         ) values(
-        '{$欄位1值}',
-        '{$欄位2值}',
-        '{$欄位3值}'
+        '{$title}',
+        '{$detail}',
+        '{$action_date}',
+        '{$end_date}',
+        '{$number}',
+        '{$setup}',
+        '{$enable}',
+        '{$uid}'
         )";
-        $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+        $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
         //取得最後新增資料的流水編號
         $id = $xoopsDB->getInsertId();
@@ -100,12 +117,16 @@ class Eric_signup_actions
 
         $myts = \MyTextSanitizer::getInstance();
         foreach ($data as $col_name => $col_val) {
-            $col_val = $myts->htmlSpecialChars($col_val);
 
             //過濾讀出的變數值 displayTarea($text, $html=0, $smiley=1, $xcode=1, $image=1, $br=1);
             // $data['大量文字欄'] = $myts->displayTarea($data['大量文字欄'], 0, 1, 0, 1, 1);
             // $data['HTML文字欄'] = $myts->displayTarea($data['HTML文字欄'], 1, 0, 0, 0, 0);
 
+            if ($col_name == 'detail') {
+                $col_val = $myts->displayTarea($col_val, 0, 1, 0, 1, 1);
+            } else {
+                $col_val = $myts->htmlSpecialChars($col_val);
+            }
             $xoopsTpl->assign($col_name, $col_val);
         }
     }
@@ -115,6 +136,10 @@ class Eric_signup_actions
     {
         global $xoopsDB;
 
+        if (!$_SESSION['eric_signup_adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
+
         //XOOPS表單安全檢查
         Utility::xoops_security_check();
 
@@ -123,11 +148,19 @@ class Eric_signup_actions
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
+        $uid    = (int) $uid;
+        $number = (int) $number;
+        $enable = (int) $enable;
 
         $sql = "update `" . $xoopsDB->prefix("eric_signup_actions") . "` set
-        `欄位1` = '{$欄位1值}',
-        `欄位2` = '{$欄位2值}',
-        `欄位3` = '{$欄位3值}'
+        `title` = '{$title}',
+        `detail` = '{$detail}',
+        `action_date` = '{$action_date}',
+        `end_date` = '{$end_date}',
+        `number` = '{$number}',
+        `setup` = '{$setup}',
+        `uid` = '{$uid}',
+        `enable` = '{$enable}'
         where `id` = '$id'";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 

@@ -25,7 +25,8 @@ switch ($op) {
     //新增資料
     case 'eric_signup_actions_store':
         $id = Eric_signup_actions::store();
-        header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功建立活動！");
         exit;
 
     //修改用表單
@@ -37,13 +38,14 @@ switch ($op) {
     //更新資料
     case 'eric_signup_actions_update':
         Eric_signup_actions::update($id);
-        header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功修改活動！");
         exit;
 
     //刪除資料
     case 'eric_signup_actions_destroy':
         Eric_signup_actions::destroy($id);
-        header("location: {$_SERVER['PHP_SELF']}");
+        header("location: {$_SERVER['PHP_SELF']}?id=$id");
         exit;
 
     default:

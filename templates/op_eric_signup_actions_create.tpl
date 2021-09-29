@@ -47,7 +47,7 @@
             欄位設定
         </label>
         <div class="col-sm-10 ">
-            <input type="text" name="setup" id="setup" class="form-control validate[required]" value="<{$setup}>" placeholder="請輸入欄位設定">
+            <textarea  name="setup" id="setup" class="form-control validate[required]" placeholder="請輸入欄位設定"><{$setup}></textarea>
         </div>
     </div>
     <div class="form-group row">
@@ -70,6 +70,7 @@
         </div>
     </div>
     <{$token_form}>
+        <input type="hidden" name="id" value="<{$id}>">
         <input type="hidden" name="uid" value="<{$uid}>">
         <input type="hidden" name="op" value="<{$next_op}>">
         <div class="bar">

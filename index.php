@@ -45,7 +45,8 @@ switch ($op) {
     //刪除資料
     case 'eric_signup_actions_destroy':
         Eric_signup_actions::destroy($id);
-        header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'], 3, "成功刪除活動！");
         exit;
 
     default:

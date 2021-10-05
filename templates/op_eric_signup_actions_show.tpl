@@ -9,7 +9,7 @@
 </h2>
 
 <div class="alert alert-info">
-12345：<{$detail}>
+<{$detail}>
 </div>
 
 

@@ -4,7 +4,9 @@
 
 namespace XoopsModules\Eric_signup;
 
+use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Tadtools\FormValidator;
+use XoopsModules\Tadtools\TadDataCenter;
 use XoopsModules\Tadtools\Utility;
 
 class Eric_signup_data
@@ -19,9 +21,9 @@ class Eric_signup_data
     }
 
     //編輯表單
-    public static function create($id = '')
+    public static function create($action_id, $id = '')
     {
-        global $xoopsTpl;
+        global $xoopsTpl, $xoopsUser;
 
         //抓取預設值
         $db_values = empty($id) ? [] : self::get($id);
@@ -43,6 +45,33 @@ class Eric_signup_data
         $token      = new \XoopsFormHiddenToken();
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
+
+        $action = Eric_signup_actions::get($action_id);
+        // Utility::dd($action);
+
+        if (time > strtotime($action['end_date'])) {
+            redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
+
+        }
+        $myts = \MyTextSanitizer::getInstance();
+        foreach ($action as $col_name => $col_val) {
+            if ($col_name == 'detail') {
+                $col_val = $myts->displayTarea($col_val, 0, 1, 0, 1, 1);
+            } else {
+                $col_val = $myts->htmlSpecialChars($col_val);
+            }
+
+            $action[$col_name] = $col_val;
+        }
+        $xoopsTpl->assign("action", $action);
+
+        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("uid", $uid);
+
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        $signup_form    = $EricDataCenter->strToForm($action['setup']);
+        $xoopsTpl->assign('signup_form', $signup_form);
+
     }
 
     //新增資料
@@ -59,19 +88,27 @@ class Eric_signup_data
             $$var_name = $myts->addSlashes($var_val);
         }
 
+        $action_id = (int) ($action_id);
+        $uid       = (int) ($uid);
+
         $sql = "insert into `" . $xoopsDB->prefix("eric_signup_data") . "` (
-        `欄位1`,
-        `欄位2`,
-        `欄位3`
+        `action_id`,
+        `uid`,
+        `signup_date`
         ) values(
-        '{$欄位1值}',
-        '{$欄位2值}',
-        '{$欄位3值}'
+        '{$action_id}',
+        '{$uid}',
+        now()
         )";
         $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
         //取得最後新增資料的流水編號
         $id = $xoopsDB->getInsertId();
+
+        // setup資料寫入
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        $EricDataCenter->set_col('id', $id);
+        $EricDataCenter->saveData();
         return $id;
     }
 

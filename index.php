@@ -3,6 +3,7 @@
 // 如「資料表名」= actions，則「模組物件」= Actions
 use Xmf\Request;
 use XoopsModules\Eric_signup\Eric_signup_actions;
+use XoopsModules\Eric_signup\Eric_signup_data;
 use XoopsModules\Tadtools\Utility;
 
 /*-----------引入檔案區--------------*/
@@ -11,8 +12,9 @@ $GLOBALS['xoopsOption']['template_main'] = 'eric_signup_index.tpl';
 require_once XOOPS_ROOT_PATH . '/header.php';
 
 /*-----------變數過濾----------*/
-$op = Request::getString('op');
-$id = Request::getInt('id');
+$op        = Request::getString('op');
+$id        = Request::getInt('id');
+$action_id = Request::getInt('action_id');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
@@ -22,7 +24,7 @@ switch ($op) {
         Eric_signup_actions::create();
         break;
 
-    //新增資料
+    //新增活動資料
     case 'eric_signup_actions_store':
         $id = Eric_signup_actions::store();
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
@@ -48,6 +50,19 @@ switch ($op) {
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'], 3, "成功刪除活動！");
         exit;
+
+    //新增報名表單
+    case 'eric_signup_data_create':
+        Eric_signup_data::create($action_id);
+        break;
+
+    //新增報名資料
+    case 'eric_signup_data_store':
+        $id = Eric_signup_data::store();
+
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功報名活動！");
+        break;
 
     default:
         if (empty($id)) {

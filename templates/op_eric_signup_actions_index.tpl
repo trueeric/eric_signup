@@ -31,7 +31,7 @@
                     <{ /if}>
 
                     <{if $xoops_isuser && $action.end_date|strtotime >= $smarty.now}>
-                        <a href="index.php?op=eric_signup_data_create&action_id=<{$action.id}>" class="btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> 立即報名</a>
+                        <a href="index.php?op=eric_signup_data_create&action_id=<{$action.id}>" class="btn btn-sm btn-success"><i class="fa fa-plus" aria-hidden="true"></i> 立即報名</a>
                     <{ /if}>
 
                 </td>

@@ -59,9 +59,25 @@ switch ($op) {
     //新增報名資料
     case 'eric_signup_data_store':
         $id = Eric_signup_data::store();
-
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功報名活動！");
+        break;
+
+    //顯示報名表
+    case 'eric_signup_data_show':
+        Eric_signup_data::show($id);
+        break;
+
+    //修改報名表單
+    case 'eric_signup_data_edit':
+        Eric_signup_data::create($action_id, $id);
+        $op = 'eric_signup_data_create';
+        break;
+
+    //更新報名表單
+    case 'eric_signup_data_update':
+        Eric_signup_data::update($id);
+        redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功修改報名資料！");
         break;
 
     default:

@@ -69,7 +69,8 @@ class Eric_signup_data
         $xoopsTpl->assign("uid", $uid);
 
         $EricDataCenter = new TadDataCenter('eric_signup');
-        $signup_form    = $EricDataCenter->strToForm($action['setup']);
+        $EricDataCenter->set_col('id', $id);
+        $signup_form = $EricDataCenter->strToForm($action['setup']);
         $xoopsTpl->assign('signup_form', $signup_form);
 
     }
@@ -115,7 +116,7 @@ class Eric_signup_data
     //以流水號秀出某筆資料內容
     public static function show($id = '')
     {
-        global $xoopsDB, $xoopsTpl;
+        global $xoopsTpl, $xoopsUser;
 
         if (empty($id)) {
             return;
@@ -127,35 +128,61 @@ class Eric_signup_data
         $myts = \MyTextSanitizer::getInstance();
         foreach ($data as $col_name => $col_val) {
             $col_val = $myts->htmlSpecialChars($col_val);
-
-            //過濾讀出的變數值 displayTarea($text, $html=0, $smiley=1, $xcode=1, $image=1, $br=1);
-            // $data['大量文字欄'] = $myts->displayTarea($data['大量文字欄'], 0, 1, 0, 1, 1);
-            // $data['HTML文字欄'] = $myts->displayTarea($data['HTML文字欄'], 1, 0, 0, 0, 0);
-
             $xoopsTpl->assign($col_name, $col_val);
+            $$col_name = $col_val;
         }
+
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        $EricDataCenter->set_col('id', $id);
+        $tdc = $EricDataCenter->getData();
+        // Utility::dd($data);
+        $xoopsTpl->assign('tdc', $tdc);
+
+        $action = Eric_signup_actions::get($action_id);
+        foreach ($action as $col_name => $col_val) {
+            if ($col_name == 'detail') {
+                $col_val = $myts->displayTarea($col_val, 0, 1, 0, 1, 1);
+            } else {
+                $col_val = $myts->htmlSpecialChars($col_val);
+            }
+
+            $action[$col_name] = $col_val;
+        }
+        $xoopsTpl->assign("action", $action);
+
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("now_uid", $now_uid);
+
     }
 
     //更新某一筆資料
     public static function update($id = '')
     {
-        global $xoopsDB;
+        global $xoopsDB, $xoopsUser;
 
         //XOOPS表單安全檢查
         Utility::xoops_security_check();
 
         $myts = \MyTextSanitizer::getInstance();
 
+        $action_id = (int) ($action_id);
+        $uid       = (int) ($uid);
+        $now_uid   = $xoopsUser ? $xoopsUser->uid() : 0;
+
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
 
         $sql = "update `" . $xoopsDB->prefix("eric_signup_data") . "` set
-        `欄位1` = '{$欄位1值}',
-        `欄位2` = '{$欄位2值}',
-        `欄位3` = '{$欄位3值}'
-        where `id` = '$id'";
-        $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+        `signup_date` =now()
+        where `id` = '$id' and `uid` = '$now_uid'";
+        if ($xoopsDB->queryF($sql)) {
+            $EricDataCenter = new TadDataCenter('eric_signup');
+            $EricDataCenter->set_col('id', $id);
+            $EricDataCenter->saveData();
+        } else {
+            Utility::web_error($sql, __FILE__, __LINE__);
+        }
 
         return $id;
     }

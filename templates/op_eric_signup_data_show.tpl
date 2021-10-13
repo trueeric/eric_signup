@@ -38,8 +38,10 @@
 
 <{if $smarty.session.eric_signup_adm || $uid== $now_uid}>
     <div class="bar">
+
         <a href="index.php?op=eric_signup_data_edit&id=<{$id}>&action_id=<{$action_id}>" class="btn btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> 修改報名資料</a>
-        <a href="index.php?op=eric_signup_data_destroy&action_id=<{$action_id}>"  class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> 取消報名</a>
+
+        <a href="javascript:del_data('<{$id}>')" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> 取消報名</a>
 
     </div>
 <{/if}>

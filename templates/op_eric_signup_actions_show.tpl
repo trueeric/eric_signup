@@ -21,6 +21,43 @@
     </small>
 </h3>
 
+<table data-toggle="table" data-pagination="true" data-search="true"   data-mobile-responsive="true">
+    <thead>
+        <tr>
+            <{foreach from=$signup.0.tdc key=col_name item=user name=tdc}>
+                <th data-sortable="true" ><{$col_name}></th>
+            <{/foreach}>
+            <th>報名日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        <{foreach from=$signup  item=signup_data}>
+            <tr>
+                <{foreach from=$signup_data.tdc key=col_name item=user_data}>
+
+                    <td>
+                        <{foreach from=$user_data item=data}>
+                            <{if $smarty.session.eric_signup_adm}>
+                                <div><{$data}></div>
+                            <{elseif  $signup_data.uid==$uid}>
+                                <div><{$data}></div>
+                            <{else}>
+                                <{if strpos($col_name,'姓名')!==false}>
+                                    <div><{$data|substr_replace:'O':3:3}></div>
+                                <{else}>
+                                    <div>***</div>
+                                <{/if}>
+                            <{/if}>
+                        <{/foreach}>
+                    </td>
+
+                <{/foreach}>
+                <td><{$signup_data.signup_date}></td>
+            </tr>
+        <{/foreach}>
+    </tbody>
+</table>
+
 
 <{if $smarty.session.eric_signup_adm}>
     <div class="bar">

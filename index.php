@@ -80,6 +80,13 @@ switch ($op) {
         redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功修改報名資料！");
         break;
 
+    //刪除資料
+    case 'eric_signup_data_destroy':
+        Eric_signup_data::destroy($id);
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功刪除活動！");
+        exit;
+
     default:
         if (empty($id)) {
             Eric_signup_actions::index();

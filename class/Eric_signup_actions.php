@@ -4,6 +4,8 @@
 
 namespace XoopsModules\Eric_signup;
 
+use XoopsModules\Eric_signup\Eric_signup_data;
+use XoopsModules\Tadtools\BootstrapTable;
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\My97DatePicker;
 use XoopsModules\Tadtools\SweetAlert;
@@ -108,7 +110,7 @@ class Eric_signup_actions
     //以流水號秀出某筆資料內容
     public static function show($id = '')
     {
-        global $xoopsDB, $xoopsTpl;
+        global $xoopsDB, $xoopsTpl, $xoopsUser;
 
         if (empty($id)) {
             return;
@@ -133,6 +135,16 @@ class Eric_signup_actions
         }
         $SweetAlert = new SweetAlert();
         $SweetAlert->render("del_action", "index.php?op=eric_signup_actions_destroy&id=", 'id');
+
+        // $autokey設為"true",signup的陣列上一層會自動重新編號
+        $signup = Eric_signup_data::get_all($id, true);
+        // Utility::dd($signup);
+        $xoopsTpl->assign('signup', $signup);
+        BootstrapTable::render();
+
+        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("uid", $uid);
+
     }
 
     //更新某一筆資料
@@ -219,14 +231,10 @@ class Eric_signup_actions
         $data_arr = [];
         while ($data = $xoopsDB->fetchArray($result)) {
 
-            // $data['文字欄'] = $myts->htmlSpecialChars($data['文字欄']);
-            // $data['大量文字欄'] = $myts->displayTarea($data['大量文字欄'], 0, 1, 0, 1, 1);
-            // $data['HTML文字欄'] = $myts->displayTarea($data['HTML文字欄'], 1, 0, 0, 0, 0);
-            // $data['數字欄'] = (int) $data['數字欄'];
-
             $data['title']  = $myts->htmlSpecialChars($data['title']);
             $data['detial'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
             $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
+            $data['signup'] = Eric_signup_data::get_all($data['id']);
 
             if ($_SESSION['api_mode'] or $auto_key) {
                 $data_arr[] = $data;

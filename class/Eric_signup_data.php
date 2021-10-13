@@ -6,17 +6,18 @@ namespace XoopsModules\Eric_signup;
 
 use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Tadtools\FormValidator;
+use XoopsModules\Tadtools\SweetAlert;
 use XoopsModules\Tadtools\TadDataCenter;
 use XoopsModules\Tadtools\Utility;
 
 class Eric_signup_data
 {
     //列出所有資料
-    public static function index()
+    public static function index($action_id)
     {
         global $xoopsTpl;
 
-        $all_data = self::get_all();
+        $all_data = self::get_all($action_id);
         $xoopsTpl->assign('all_data', $all_data);
     }
 
@@ -48,8 +49,10 @@ class Eric_signup_data
 
         $action = Eric_signup_actions::get($action_id);
         // Utility::dd($action);
-
+        $action['signup'] = Eric_signup_data::get_all($action_id);
         if (time > strtotime($action['end_date'])) {
+            redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
+        } elseif (count($action['signup']) >= $action['number']) {
             redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
 
         }
@@ -153,6 +156,10 @@ class Eric_signup_data
         $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
         $xoopsTpl->assign("now_uid", $now_uid);
 
+        //刪除前再確認
+        $SweetAlert = new SweetAlert();
+        $SweetAlert->render("del_data", "index.php?op=eric_signup_data_destroy&action_id={$action_id}&id=", 'id');
+
     }
 
     //更新某一筆資料
@@ -190,15 +197,27 @@ class Eric_signup_data
     //刪除某筆資料資料
     public static function destroy($id = '')
     {
-        global $xoopsDB;
+        global $xoopsDB, $xoopsUser;
 
         if (empty($id)) {
             return;
         }
+        $uid     = (int) ($uid);
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
 
         $sql = "delete from `" . $xoopsDB->prefix("eric_signup_data") . "`
-        where `id` = '{$id}'";
-        $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+        where `id` = '{$id}' and `uid` = '$now_uid'";
+
+        if ($xoopsDB->queryF($sql)) {
+
+            $EricDataCenter = new TadDataCenter('eric_signup');
+            $EricDataCenter->set_col('id', $id);
+            //deldata沒有指定，就是刪該筆所有的相關欄位
+            $EricDataCenter->delData();
+        } else {
+            Utility::web_error($sql, __FILE__, __LINE__);
+        }
+
     }
 
     //以流水號取得某筆資料
@@ -218,20 +237,22 @@ class Eric_signup_data
     }
 
     //取得所有資料陣列
-    public static function get_all($auto_key = false)
+    public static function get_all($action_id, $auto_key = false)
     {
         global $xoopsDB;
         $myts = \MyTextSanitizer::getInstance();
 
-        $sql      = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where 1 ";
+        $sql      = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' order by `signup_date` ";
         $result   = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
         $data_arr = [];
+
+        $EricDataCenter = new TadDataCenter('eric_signup');
         while ($data = $xoopsDB->fetchArray($result)) {
 
-            // $data['文字欄'] = $myts->htmlSpecialChars($data['文字欄']);
-            // $data['大量文字欄'] = $myts->displayTarea($data['大量文字欄'], 0, 1, 0, 1, 1);
-            // $data['HTML文字欄'] = $myts->displayTarea($data['HTML文字欄'], 1, 0, 0, 0, 0);
-            // $data['數字欄'] = (int) $data['數字欄'];
+            $EricDataCenter = new TadDataCenter('eric_signup');
+            $EricDataCenter->set_col('id', $data['id']);
+            $data['tdc'] = $EricDataCenter->getData();
+            // Utility::dd($data);
 
             if ($_SESSION['api_mode'] or $auto_key) {
                 $data_arr[] = $data;

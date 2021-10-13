@@ -137,7 +137,7 @@ class Eric_signup_actions
         $SweetAlert->render("del_action", "index.php?op=eric_signup_actions_destroy&id=", 'id');
 
         // $autokey設為"true",signup的陣列上一層會自動重新編號
-        $signup = Eric_signup_data::get_all($id, true);
+        $signup = Eric_signup_data::get_all($id, null, true);
         // Utility::dd($signup);
         $xoopsTpl->assign('signup', $signup);
         BootstrapTable::render();

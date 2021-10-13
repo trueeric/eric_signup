@@ -1,6 +1,5 @@
 <?php
-// 如「模組目錄」= signup，則「首字大寫模組目錄」= Signup
-// 如「資料表名」= actions，則「模組物件」= Actions
+
 use Xmf\Request;
 use XoopsModules\Eric_signup\Eric_signup_data;
 use XoopsModules\Tadtools\Utility;
@@ -11,16 +10,15 @@ $GLOBALS['xoopsOption']['template_main'] = 'eric_signup_index.tpl';
 require_once XOOPS_ROOT_PATH . '/header.php';
 
 /*-----------變數過濾----------*/
-$op        = Request::getString('op');
-$id        = Request::getInt('id');
-$action_id = Request::getInt('action_id');
+$op  = Request::getString('op');
+$uid = Request::getInt('uid');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
 
     default:
 
-        Eric_signup_data::my();
+        Eric_signup_data::my($uid);
         $op = 'eric_signup_data_my';
         break;
 

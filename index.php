@@ -15,6 +15,7 @@ require_once XOOPS_ROOT_PATH . '/header.php';
 $op        = Request::getString('op');
 $id        = Request::getInt('id');
 $action_id = Request::getInt('action_id');
+$accept    = Request::getInt('accept');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
@@ -85,6 +86,13 @@ switch ($op) {
         Eric_signup_data::destroy($id);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功刪除活動！");
+        exit;
+
+    //更新錄取狀能
+    case 'eric_signup_data_accept':
+        Eric_signup_data::accept($id, $accept);
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功更新錄取狀態！");
         exit;
 
     default:

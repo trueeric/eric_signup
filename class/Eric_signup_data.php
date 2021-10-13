@@ -5,6 +5,7 @@
 namespace XoopsModules\Eric_signup;
 
 use XoopsModules\Eric_signup\Eric_signup_actions;
+use XoopsModules\Tadtools\BootstrapTable;
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\SweetAlert;
 use XoopsModules\Tadtools\TadDataCenter;
@@ -237,12 +238,20 @@ class Eric_signup_data
     }
 
     //取得所有資料陣列
-    public static function get_all($action_id, $auto_key = false)
+    public static function get_all($action_id = '', $uid = '', $auto_key = false)
     {
-        global $xoopsDB;
+        global $xoopsDB, $xoopsUser;
         $myts = \MyTextSanitizer::getInstance();
 
-        $sql      = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' order by `signup_date` ";
+        if ($action_id) {
+            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' order by `signup_date` ";
+        } else {
+            if (!$_SESSION['eric_signup_adm'] or !$uid) {
+                $uid = $xoopsUser ? $xoopsUser->uid() : 0;
+            }
+            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `uid`= '$uid' order by `signup_date` ";
+        }
+
         $result   = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
         $data_arr = [];
 
@@ -251,7 +260,8 @@ class Eric_signup_data
 
             $EricDataCenter = new TadDataCenter('eric_signup');
             $EricDataCenter->set_col('id', $data['id']);
-            $data['tdc'] = $EricDataCenter->getData();
+            $data['tdc']    = $EricDataCenter->getData();
+            $data['action'] = Eric_signup_actions::get($data['action_id']);
             // Utility::dd($data);
 
             if ($_SESSION['api_mode'] or $auto_key) {
@@ -263,4 +273,33 @@ class Eric_signup_data
         return $data_arr;
     }
 
+    //查詢某人的報名紀錄
+    public static function my($uid)
+    {
+        global $xoopsTpl, $xoopsUser;
+        $my_signup = self::get_all(null, $uid);
+
+        $xoopsTpl->assign('my_signup', $my_signup);
+        BootstrapTable::render();
+
+    }
+
+    //更新錄取狀態
+    public static function accept($id, $accept)
+    {
+        global $xoopsDB;
+
+        if (!$_SESSION['eric_signup_adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
+
+        $id     = (int) ($id);
+        $accept = (int) ($accept);
+
+        $sql = "update `" . $xoopsDB->prefix("eric_signup_data") . "` set
+        `accept` ='$accept'
+        where `id` = '$id' ";
+        $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+
+    }
 }

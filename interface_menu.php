@@ -19,7 +19,7 @@ $interface_icon[_TAD_TO_MOD] = "fa-chevron-right";
 
 //我的報名紀錄
 if ($xoopsUser) {
-    $interface_menu['我的報名紀錄'] = "my_signup.php.php";
+    $interface_menu['我的報名紀錄'] = "my_signup.php";
     $interface_icon['我的報名紀錄'] = "fa-chevron-right";
 }
 

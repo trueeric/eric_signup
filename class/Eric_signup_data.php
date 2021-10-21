@@ -27,8 +27,11 @@ class Eric_signup_data
     {
         global $xoopsTpl, $xoopsUser;
 
+        // 如果非管理員，強制抓user_id
+        $uid = $_SESSION['eric_signup_adm'] ? null : $xoopsUser->uid();
+
         //抓取預設值
-        $db_values = empty($id) ? [] : self::get($id);
+        $db_values = empty($id) ? [] : self::get($id, $uid);
 
         foreach ($db_values as $col_name => $col_val) {
             $$col_name = $col_val;
@@ -48,7 +51,7 @@ class Eric_signup_data
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
 
-        $action = Eric_signup_actions::get($action_id);
+        $action = Eric_signup_actions::get($action_id, true);
         // Utility::dd($action);
         $action['signup'] = Eric_signup_data::get_all($action_id);
         if (time > strtotime($action['end_date'])) {
@@ -57,16 +60,7 @@ class Eric_signup_data
             redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
 
         }
-        $myts = \MyTextSanitizer::getInstance();
-        foreach ($action as $col_name => $col_val) {
-            if ($col_name == 'detail') {
-                $col_val = $myts->displayTarea($col_val, 0, 1, 0, 1, 1);
-            } else {
-                $col_val = $myts->htmlSpecialChars($col_val);
-            }
 
-            $action[$col_name] = $col_val;
-        }
         $xoopsTpl->assign("action", $action);
 
         $uid = $xoopsUser ? $xoopsUser->uid() : 0;
@@ -126,8 +120,14 @@ class Eric_signup_data
             return;
         }
 
-        $id   = (int) $id;
-        $data = self::get($id);
+        $id = (int) $id;
+
+        // 如果非管理員，強制抓user_id
+        $uid  = $_SESSION['eric_signup_adm'] ? null : $xoopsUser->uid();
+        $data = self::get($id, $uid);
+        if (empty($data)) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "查無報名資料，無法觀看!!");
+        }
 
         $myts = \MyTextSanitizer::getInstance();
         foreach ($data as $col_name => $col_val) {
@@ -142,16 +142,8 @@ class Eric_signup_data
         // Utility::dd($data);
         $xoopsTpl->assign('tdc', $tdc);
 
-        $action = Eric_signup_actions::get($action_id);
-        foreach ($action as $col_name => $col_val) {
-            if ($col_name == 'detail') {
-                $col_val = $myts->displayTarea($col_val, 0, 1, 0, 1, 1);
-            } else {
-                $col_val = $myts->htmlSpecialChars($col_val);
-            }
+        $action = Eric_signup_actions::get($action_id, true);
 
-            $action[$col_name] = $col_val;
-        }
         $xoopsTpl->assign("action", $action);
 
         $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
@@ -222,7 +214,7 @@ class Eric_signup_data
     }
 
     //以流水號取得某筆資料
-    public static function get($id = '')
+    public static function get($id = '', $uid = '')
     {
         global $xoopsDB;
 
@@ -230,10 +222,10 @@ class Eric_signup_data
             return;
         }
 
-        $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "`
-        where `id` = '{$id}'";
-        $result = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
-        $data   = $xoopsDB->fetchArray($result);
+        $and_uid = $uid ? " and `uid`='$uid'" : '';
+        $sql     = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `id` = '{$id}' $and_uid ";
+        $result  = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+        $data    = $xoopsDB->fetchArray($result);
         return $data;
     }
 
@@ -261,7 +253,7 @@ class Eric_signup_data
             $EricDataCenter = new TadDataCenter('eric_signup');
             $EricDataCenter->set_col('id', $data['id']);
             $data['tdc']    = $EricDataCenter->getData();
-            $data['action'] = Eric_signup_actions::get($data['action_id']);
+            $data['action'] = Eric_signup_actions::get($data['action_id'], true);
             // Utility::dd($data);
 
             if ($_SESSION['api_mode'] or $auto_key) {
@@ -301,5 +293,48 @@ class Eric_signup_data
         where `id` = '$id' ";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
+    }
+
+    // 統計 radio, checkbox, select
+    public static function statistics($setup, $signup = [])
+    {
+        $result = [];
+        // "\n"用在linux環境,"\n\r"用在winodws環境
+        $setup_items = explode("\n", $setup);
+        // Utility::dd($setup);
+
+        foreach ($setup_items as $setup_item) {
+            if (preg_match("/radio|checkbox|select/", $setup_item)) {
+                // Utility::dd($setup_item);
+                $items = explode(",", $setup_item);
+                // Utility::dd($item);
+                //如果stup中有設定必填，"*"去掉
+                $title = str_replace("*", "", $items[0]);
+                // Utility::dd($title);
+                foreach ($signup as $data) {
+                    // Utility::dd($data);
+                    foreach ($data['tdc'][$title] as $option) {
+                        // Utility::dd($data['tdc'][$title]);
+                        // echo "start!";
+                        // print_r($result[$title][$option] . "    TEST");
+                        $result[$title][$option]++;
+                        // print_r($result);
+                        // echo "end!!!!";
+                    }
+                    // echo "\n";
+                }
+                // die();
+                // print_r($result);
+                // die();
+                // Utility::dd($$result[$title][$option]);
+            }
+
+            // Utility::dd($data['tdc'][$title]);
+            // Utility::dd($$result[$title][$option]);
+        }
+        // die();
+        // print_r($result);
+        // die();
+        return $result;
     }
 }

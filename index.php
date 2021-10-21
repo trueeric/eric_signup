@@ -20,7 +20,7 @@ $accept    = Request::getInt('accept');
 /*-----------執行動作判斷區----------*/
 switch ($op) {
 
-    //新增表單
+    //新增活動
     case 'eric_signup_actions_create':
         Eric_signup_actions::create();
         break;
@@ -93,6 +93,12 @@ switch ($op) {
         Eric_signup_data::accept($id, $accept);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功更新錄取狀態！");
+        exit;
+
+    // 複製活動
+    case 'eric_signup_actions_copy':
+        $new_id = Eric_signup_actions::copy($id);
+        header("location: {$_SERVER['PHP_SELF']}?op=eric_signup_actions_edit&id=$new_id");
         exit;
 
     default:

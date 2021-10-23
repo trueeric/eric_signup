@@ -55,9 +55,9 @@ class Eric_signup_data
         // Utility::dd($action);
         $action['signup'] = Eric_signup_data::get_all($action_id);
         if (time > strtotime($action['end_date'])) {
-            redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
+            redirect_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
         } elseif (count($action['signup']) >= $action['number']) {
-            redirec_header($_SERVER['PHP_SELF'], 3, "報名日期已截止，無法進行新增報名或修改報名!");
+            redirect_header($_SERVER['PHP_SELF'], 3, "人數已滿，無法進行新增報名!");
 
         }
 
@@ -337,4 +337,128 @@ class Eric_signup_data
         // die();
         return $result;
     }
+
+    //立即寄出
+    public static function send($title = "無標題", $content = "無內容", $email = "")
+    {
+        global $xoopsUser;
+        if (empty($email)) {
+            $email = $xoopsUser->email();
+        }
+        $xoopsMailer                           = xoops_getMailer();
+        $xoopsMailer->multimailer->ContentType = "text/html";
+        $xoopsMailer->addHeaders("MIME-Version: 1.0");
+        $header = '';
+        return $xoopsMailer->sendMail($email, $title, $content, $header);
+    }
+
+    //產生通知信
+    public static function mail($id, $type, $signup = [])
+    {
+        global $xoopsUser;
+        $id     = (int) $id;
+        $signup = $signup ? $signup : self::get($id);
+        if (empty($id)) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "無編號!無法寄送!!");
+        }
+        $action = Eric_signup_actions::get($signup['action_id']);
+        $now    = date("Y-m-d H:i:s");
+        $name   = $name ? $name : $xoopsUser->name();
+
+        $member_handler = xoops_getHandler('member');
+        $admUser        = $member_handler->getUser($action['uid']);
+        $adm_email      = $admUser->email();
+
+        if ($type == 'destroy') {
+            $title = "「{$action['title']}」取消報名通知";
+            $head  = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，已於{$now}由{$name}取消</p>";
+            $foot  = "欲重新報名，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?op=eric_signup_data_create&action_id={$action['id']}";
+        } elseif ($type == 'store') {
+            $title = "「{$action['title']}」報名完成通知";
+            $head  = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，已於{$now}由{$name}完成</p>";
+            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?op=eric_signup_data_show&id={$signup['id']}";
+        } elseif ($type == 'update') {
+            $title = "「{$action['title']}」修改報名資料通知";
+            $head  = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，已於{$now}由{$name}修改資料如后。</p>";
+            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?op=eric_signup_data_show&id={$signup['id']}";
+        }
+
+        $content = self::mk_content($id, $head, $foot, $action);
+
+        if (!self::send($title, $content, $email)) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "通知信寄發失敗!!");
+        }
+        // 失敗時上一行就轉走了，所以不用寫elseif
+        self::send($title, $content, $adm_email);
+
+    }
+    //產生通知信知容
+    public static function mk_content($id, $head = '', $foot = '', $action = [])
+    {
+
+        if ($id) {
+            $EricDataCenter = new TadDataCenter('eric_signup');
+            $EricDataCenter->set_col('id', $id);
+            $tdc = $EricDataCenter->getData();
+
+            $table = '<table class="table">';
+
+            foreach ($tdc as $title => $signup) {
+                $table .= "
+               <tr>
+                    <th>{$title}</th>
+                    <td>";
+
+                foreach ($signup as $i => $val) {
+                    $table .= "<div>{$val}</div>";
+                }
+
+                $table .= "</td>
+               </tr>";
+            }
+            $table .= '</table>';
+        }
+
+        $content = "
+        <html>
+            <head>
+                <style>
+                    .table{
+                        border:1px  solid #000;
+                        border-collapse: collapse;
+                        margin:10px 0px;
+                    }
+
+                    .table th , .table td{
+                        border:1px; solid #000;
+                        padding:4px 10px;
+                    }
+
+                    .table th{
+                        background:#c1e7f4;
+                    }
+                    .well{
+                        border-radius:10px;
+                        background:#fcfcfc;
+                        border:2px solid #cfcfcf;
+                        padding:14px 16px;
+                        margin:10px 0px;
+                    }
+                </style>
+            </head>
+            <body>
+            $head
+            <h2>{$action['title']}</h2>
+            <div>活動日期:{$action['action_date']}</div>
+            <div class='well'>{$action['detail']}</div>
+            $table
+            $foot
+            </body>
+        </html>
+        ";
+
+        return $content;
+
+    }
+
 }

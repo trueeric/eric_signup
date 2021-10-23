@@ -60,6 +60,8 @@ switch ($op) {
     //新增報名資料
     case 'eric_signup_data_store':
         $id = Eric_signup_data::store();
+        // Utility::dd($id);
+        Eric_signup_data::mail($id, 'store');
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功報名活動！");
         break;
@@ -78,12 +80,16 @@ switch ($op) {
     //更新報名表單
     case 'eric_signup_data_update':
         Eric_signup_data::update($id);
+        Eric_signup_data::mail($id, 'update');
         redirect_header($_SERVER['PHP_SELF'] . "?op=eric_signup_data_show&id=$id", 3, "成功修改報名資料！");
         break;
 
     //刪除資料
     case 'eric_signup_data_destroy':
+        $uid    = $_SESSION['eric_sign_up'] ? null : $xoopsUser->uid();
+        $signup = Eric_signup_data::get($id, $uid);
         Eric_signup_data::destroy($id);
+        Eric_signup_data::mail($id, 'destroy', $signup);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功刪除活動！");
         exit;
@@ -91,6 +97,7 @@ switch ($op) {
     //更新錄取狀能
     case 'eric_signup_data_accept':
         Eric_signup_data::accept($id, $accept);
+        Eric_signup_data::mail($id, 'accept');
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
         redirect_header($_SERVER['PHP_SELF'] . "?id=$action_id", 3, "成功更新錄取狀態！");
         exit;

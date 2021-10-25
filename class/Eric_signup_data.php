@@ -28,7 +28,7 @@ class Eric_signup_data
         global $xoopsTpl, $xoopsUser;
 
         // 如果非管理員，強制抓user_id
-        $uid = $_SESSION['eric_signup_adm'] ? null : $xoopsUser->uid();
+        $uid = $_SESSION['can_add'] ? null : $xoopsUser->uid();
 
         //抓取預設值
         $db_values = empty($id) ? [] : self::get($id, $uid);
@@ -123,7 +123,7 @@ class Eric_signup_data
         $id = (int) $id;
 
         // 如果非管理員，強制抓user_id
-        $uid  = $_SESSION['eric_signup_adm'] ? null : $xoopsUser->uid();
+        $uid  = $_SESSION['can_add'] ? null : $xoopsUser->uid();
         $data = self::get($id, $uid);
         if (empty($data)) {
             redirect_header($_SERVER['PHP_SELF'], 3, "查無報名資料，無法觀看!!");
@@ -238,7 +238,7 @@ class Eric_signup_data
         if ($action_id) {
             $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' order by `signup_date` ";
         } else {
-            if (!$_SESSION['eric_signup_adm'] or !$uid) {
+            if (!$_SESSION['can_add'] or !$uid) {
                 $uid = $xoopsUser ? $xoopsUser->uid() : 0;
             }
             $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `uid`= '$uid' order by `signup_date` ";
@@ -281,7 +281,7 @@ class Eric_signup_data
     {
         global $xoopsDB;
 
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
@@ -376,11 +376,23 @@ class Eric_signup_data
         } elseif ($type == 'store') {
             $title = "「{$action['title']}」報名完成通知";
             $head  = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，已於{$now}由{$name}完成</p>";
-            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?op=eric_signup_data_show&id={$signup['id']}";
+            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?id={$signup['action_id']}";
         } elseif ($type == 'update') {
             $title = "「{$action['title']}」修改報名資料通知";
             $head  = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，已於{$now}由{$name}修改資料如后。</p>";
-            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?op=eric_signup_data_show&id={$signup['id']}";
+            $foot  = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?id={$signup['action_id']}";
+        } elseif ($type == 'accept') {
+            $title = "「{$action['title']}」報名錄取狀況通知";
+            if ($signup['accept'] == 1) {
+                $head = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動經審核，<h2 style='color:blue'>恭喜錄取!!</h2>您的報名資料如后。</p>";
+            } else {
+                $head = "<p>您於{$signup['signup_date']}報名了「{$action['title']}」活動，很抱歉!因人數關係，<span style='color:red'>未能錄取</span>，您的報名資料如后。</p>";
+            }
+
+            $foot = "完整詳情，請連至" . XOOPS_URL . "/modules/eric_signup/index.php?id={$signup['action_id']}";
+
+            $signupUser = $member_handler->getUser($action['uid']);
+            $email      = $signupUser->email();
         }
 
         $content = self::mk_content($id, $head, $foot, $action);
@@ -429,8 +441,8 @@ class Eric_signup_data
                         margin:10px 0px;
                     }
 
-                    .table th , .table td{
-                        border:1px; solid #000;
+                    .table th, .table td{
+                        border:1px solid #000;
                         padding:4px 10px;
                     }
 

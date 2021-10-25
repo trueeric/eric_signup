@@ -59,14 +59,14 @@ $modversion['templates'][] = ['file' => 'eric_signup_admin.tpl', 'description' =
 $modversion['templates'][] = ['file' => 'eric_signup_index.tpl', 'description' => '前台共同樣板'];
 
 //---偏好設定---//
-$modversion['config'] = array();
-//$i=0;
-//$modversion['config'][$i]['name']    = '偏好設定名稱（英文）';
-//$modversion['config'][$i]['title']    = '偏好設定標題（常數）';
-//$modversion['config'][$i]['description']    = '偏好設定說明（常數）';
-//$modversion['config'][$i]['formtype']    = '輸入表單類型';
-//$modversion['config'][$i]['valuetype']    = '輸入值類型';
-//$modversion['config'][$i]['default']    = 預設值;
+$modversion['config']                    = array();
+$i                                       = 0;
+$modversion['config'][$i]['name']        = 'show_number';
+$modversion['config'][$i]['title']       = '_MI_TAD_SIGNUP_SHOW_NUMBER';
+$modversion['config'][$i]['description'] = '_MI_TAD_SIGNUP_SHOW_NUMBER_DESC';
+$modversion['config'][$i]['formtype']    = 'textbox';
+$modversion['config'][$i]['valuetype']   = 'int';
+$modversion['config'][$i]['default']     = 5;
 //
 //$i++;
 

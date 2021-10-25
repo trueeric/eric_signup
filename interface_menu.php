@@ -1,8 +1,14 @@
 <?php
+use XoopsModules\Tadtools\Utility;
+
 //判斷是否對該模組有管理權限，本版開始有區分模組，$_SESSION['eric_signup_adm']
 $is_admin = basename(__DIR__) . '_adm';
 if (!isset($_SESSION[$is_admin])) {
     $_SESSION[$is_admin] = ($xoopsUser) ? $xoopsUser->isAdmin() : false;
+}
+// 判斷有無開設活動的權限
+if (!isset($_SESSION['can_add'])) {
+    $_SESSION['can_add'] = Utility::power_chk($perm_name = 'eric_signup', $perm_itemid = '1');
 }
 
 // printf('$is_admin' . isset($_SESSION[$is_admin]));

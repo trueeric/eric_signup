@@ -14,31 +14,44 @@ use XoopsModules\Tadtools\Utility;
 class Eric_signup_actions
 {
     //列出所有資料
-    public static function index()
+    public static function index($only_enable = true)
     {
-        global $xoopsTpl;
+        global $xoopsTpl, $xoopsUser;
 
-        $all_data = self::get_all();
+        $all_data = self::get_all($only_enable);
         // Utility::dd($all_data);
         $xoopsTpl->assign('all_data', $all_data);
+
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("now_uid", $now_uid);
+
     }
 
     //編輯表單
     public static function create($id = '')
     {
         global $xoopsTpl, $xoopsUser;
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
-        //抓取預設值
-        $db_values           = empty($id) ? [] : self::get($id);
-        $db_values['number'] = empty($id) ? 50 : $db_values['number'];
-        $db_values['enable'] = empty($id) ? 1 : $db_values['enable'];
+        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        if ($uid) {
+            //抓取預設值
+            $db_values = empty($id) ? [] : self::get($id);
+            // 需本人建立的或管理員才能改
+            if ($uid != $db_values['uid'] && $uid != $_SESSION['eric_signup-adm']) {
+                redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+            }
+            $db_values['number'] = empty($id) ? 50 : $db_values['number'];
+            $db_values['enable'] = empty($id) ? 1 : $db_values['enable'];
 
-        foreach ($db_values as $col_name => $col_val) {
-            $$col_name = $col_val;
-            $xoopsTpl->assign($col_name, $col_val);
+            foreach ($db_values as $col_name => $col_val) {
+                $$col_name = $col_val;
+                $xoopsTpl->assign($col_name, $col_val);
+            }
+        } else {
+            $xoopsTpl->assign("uid", $uid);
         }
 
         $op = empty($id) ? "eric_signup_actions_store" : "eric_signup_actions_update";
@@ -53,10 +66,6 @@ class Eric_signup_actions
         $token      = new \XoopsFormHiddenToken();
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
-
-        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
-        $xoopsTpl->assign("uid", $uid);
-
         My97DatePicker::render();
     }
 
@@ -65,7 +74,7 @@ class Eric_signup_actions
     {
         global $xoopsDB;
 
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
@@ -137,17 +146,17 @@ class Eric_signup_actions
 
         BootstrapTable::render();
 
-        $uid = $xoopsUser ? $xoopsUser->uid() : 0;
-        $xoopsTpl->assign("uid", $uid);
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $xoopsTpl->assign("now_uid", $now_uid);
 
     }
 
     //更新某一筆資料
     public static function update($id = '')
     {
-        global $xoopsDB;
+        global $xoopsDB, $xoopsUser;
 
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
@@ -162,6 +171,12 @@ class Eric_signup_actions
         $uid    = (int) $uid;
         $number = (int) $number;
         $enable = (int) $enable;
+
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        // 需本人建立的或管理員才能改
+        if ($now_uid != $uid && !$_SESSION['eric_signup-adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
 
         $sql = "update `" . $xoopsDB->prefix("eric_signup_actions") . "` set
         `title` = '{$title}',
@@ -181,14 +196,20 @@ class Eric_signup_actions
     //刪除某筆資料資料
     public static function destroy($id = '')
     {
-        global $xoopsDB;
+        global $xoopsDB, $xoopsUser;
 
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
         if (empty($id)) {
             return;
+        }
+        $action  = self::get($id);
+        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        // 需本人建立的或管理員才能改
+        if ($action['uid'] != $now_uid && !$_SESSION['eric_signup-adm']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
         $sql = "delete from `" . $xoopsDB->prefix("eric_signup_actions") . "`
@@ -254,7 +275,7 @@ class Eric_signup_actions
     {
         global $xoopsDB, $xoopsUser;
 
-        if (!$_SESSION['eric_signup_adm']) {
+        if (!$_SESSION['can_add']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 

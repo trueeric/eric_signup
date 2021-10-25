@@ -1,5 +1,8 @@
 <?php
-include_once XOOPS_ROOT_PATH . "/modules/tadtools/language/{$xoopsConfig['language']}/modinfo_common.php";
+xoops_loadLanguage('modinfo_common', 'tadtools');
 
-define("_MI_XXX_ADMENU1", "主管理頁");
-define("_MI_XXX_ADMENU1_DESC", "後台主管理頁");
+define("_MI_ERIC_SIGNUP_ADMENU1", "活動管理");
+define("_MI_ERIC_SIGNUP_DESC", "後台活動管理頁");
+
+define("_MI_ERIC_SIGNUP_ADMENU2", "權限管理");
+define("_MI_ERIC_SIGNUP_DESC", "後台權限管理");

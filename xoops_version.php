@@ -59,16 +59,23 @@ $modversion['templates'][] = ['file' => 'eric_signup_admin.tpl', 'description' =
 $modversion['templates'][] = ['file' => 'eric_signup_index.tpl', 'description' => '前台共同樣板'];
 
 //---偏好設定---//
-$modversion['config']                    = array();
-$i                                       = 0;
-$modversion['config'][$i]['name']        = 'show_number';
-$modversion['config'][$i]['title']       = '_MI_TAD_SIGNUP_SHOW_NUMBER';
-$modversion['config'][$i]['description'] = '_MI_TAD_SIGNUP_SHOW_NUMBER_DESC';
-$modversion['config'][$i]['formtype']    = 'textbox';
-$modversion['config'][$i]['valuetype']   = 'int';
-$modversion['config'][$i]['default']     = 5;
-//
-//$i++;
+$modversion['config'][] = [
+    'name'        => 'show_number',
+    'title'       => '_MI_ERIC_SIGNUP_SHOW_NUMBER',
+    'description' => '_MI_ERIC_SIGNUP_SHOW_NUMBER_DESC',
+    'formtype'    => 'textbox',
+    'valuetype'   => 'int',
+    'default'     => 10,
+];
+
+$modversion['config'][] = [
+    'name'        => 'only_enable',
+    'title'       => '_MI_ERIC_SIGNUP_ONLY_ENABLE',
+    'description' => '_MI_ERIC_SIGNUP_ONLY_ENABLE_DESC',
+    'formtype'    => 'yesno',
+    'valuetype'   => 'int',
+    'default'     => 0,
+];
 
 //---搜尋---//
 //$modversion['hasSearch'] = 1;

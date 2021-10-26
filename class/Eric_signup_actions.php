@@ -6,6 +6,7 @@ namespace XoopsModules\Eric_signup;
 
 use XoopsModules\Eric_signup\Eric_signup_data;
 use XoopsModules\Tadtools\BootstrapTable;
+use XoopsModules\Tadtools\CkEditor;
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\My97DatePicker;
 use XoopsModules\Tadtools\SweetAlert;
@@ -23,7 +24,7 @@ class Eric_signup_actions
         $xoopsTpl->assign('all_data', $all_data);
 
         $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
-        $xoopsTpl->assign("now_uid", $now_uid);
+        $xoopsTpl->assign('now_uid', $now_uid);
 
     }
 
@@ -67,6 +68,10 @@ class Eric_signup_actions
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
         My97DatePicker::render();
+
+        $CkEditor = new CkEditor("eric_signup", "detail", $detail);
+        $editor   = $CkEditor->render();
+        $xoopsTpl->assign('editor', $editor);
     }
 
     //新增資料
@@ -233,8 +238,10 @@ class Eric_signup_actions
         $data   = $xoopsDB->fetchArray($result);
 
         if ($filter) {
-            $myts           = \MyTextSanitizer::getInstance();
-            $data['detail'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
+            $myts = \MyTextSanitizer::getInstance();
+            // 如果'detail'改用ckeditor,displayTarea過濾方式要換
+            $data['detail'] = $myts->displayTarea($data['detail'], 1, 0, 0, 0, 0);
+            // $data['detail'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
             // 此處過濾setup會出問題
             // $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
             $data['title'] = $myts->htmlSpecialChars($data['title']);
@@ -265,9 +272,12 @@ class Eric_signup_actions
         $data_arr = [];
         while ($data = $xoopsDB->fetchArray($result)) {
 
-            $data['title']  = $myts->htmlSpecialChars($data['title']);
-            $data['detial'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
-            $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
+            $data['title'] = $myts->htmlSpecialChars($data['title']);
+            // 如果'detail'改用ckeditor,displayTarea過濾方式要換
+            $data['detail'] = $myts->displayTarea($data['detail'], 1, 0, 0, 0, 0);
+            // $data['detial'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
+            // 此處過濾setup會出問題
+            // $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
             $data['signup'] = Eric_signup_data::get_all($data['id']);
 
             if ($_SESSION['api_mode'] or $auto_key) {

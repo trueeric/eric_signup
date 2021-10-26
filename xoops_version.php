@@ -82,17 +82,28 @@ $modversion['hasSearch'] = 1;
 $modversion['search']    = ['file' => "include/search.php", 'func' => "eric_signup_search"];
 
 //---區塊設定---//
-//$modversion['blocks'] = array();
-//$i=1;
-//$modversion['blocks'][$i]['file'] = "區塊檔.php";
-//$modversion['blocks'][$i]['name'] = 區塊名稱（常數）;
-//$modversion['blocks'][$i]['description'] = 區塊說明（常數）;
-//$modversion['blocks'][$i]['show_func'] = "執行區塊函數名稱";
-//$modversion['blocks'][$i]['template'] = "區塊樣板.tpl";
-//$modversion['blocks'][$i]['edit_func'] = "編輯區塊函數名稱";
-//$modversion['blocks'][$i]['options'] = "設定值1|設定值2";
-//
-//$i++;
+$modversion['blocks'][] = [
+    'file' =>  'action_list.php ';
+    'name' => '可報名活動一覽';
+    'description' => '列出所有可報名活動';
+    'show_func' =>  'action_list';
+    'template' =>  'action_list.tpl ';
+    'edit_func' =>  'action_list_edit';
+    'options' =>  '5|, `action_date` desc ';
+];
+
+// $modversion['blocks'][] = [
+//     'file' =>  '區塊檔.php ';
+//     'name' => 區塊名稱（常數）;
+//     'description' => 區塊說明（常數）;
+//     'show_func' =>  '執行區塊函數名稱 ';
+//     'template' =>  '區塊樣板.tpl ';
+//     'edit_func' =>  '編輯區塊函數名稱 ';
+//     'options' =>  '設定值1|設定值2 ';
+// ];
+
+
+
 
 //---評論---//
 //$modversion['hasComments'] = 1;

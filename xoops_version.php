@@ -78,8 +78,8 @@ $modversion['config'][] = [
 ];
 
 //---搜尋---//
-$modversion['hasSearch']      = 1;
-$modversion['search']=['file'] => "include/search.php",['func'] => "搜尋函數名稱";
+$modversion['hasSearch'] = 1;
+$modversion['search']    = ['file' => "include/search.php", 'func' => "eric_signup_search"];
 
 //---區塊設定---//
 //$modversion['blocks'] = array();

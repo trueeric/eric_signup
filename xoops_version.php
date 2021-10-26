@@ -87,9 +87,9 @@ $modversion['blocks'][] = [
     'name'        => '可報名活動一覽',
     'description' => '列出所有可報名活動',
     'show_func'   => 'action_list',
-    'template'    => 'action_list.tpl ',
+    'template'    => 'action_list.tpl',
     'edit_func'   => 'action_list_edit',
-    'options'     => '5|, `action_date` desc ',
+    'options'     => '5|, `action_date` desc',
 ];
 
 // $modversion['blocks'][] = [

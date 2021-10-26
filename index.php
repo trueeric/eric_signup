@@ -110,7 +110,7 @@ switch ($op) {
 
     default:
         if (empty($id)) {
-            Eric_signup_actions::index();
+            Eric_signup_actions::index($xoopsModuleConfig['only_enable']);
             $op = 'eric_signup_actions_index';
         } else {
             Eric_signup_actions::show($id);

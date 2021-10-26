@@ -48,6 +48,7 @@
             <{ /foreach}>
     </tbody>
 </table>
+<{$bar}>
 <{if $smarty.session.can_add}>
     <div class="bar">
         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_create" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> 新增報名活動</a>

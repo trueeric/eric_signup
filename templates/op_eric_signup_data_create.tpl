@@ -1,5 +1,5 @@
 <h2 class="my">報名表
-    <{if $enable && $number > $signup|@count  && $end_date|strtotime >= $smarty.now}>
+    <{if $action.enable && $action.number > $action.signup|@count  && $action.end_date|strtotime >= $smarty.now }>
         <i class="fa fa-check text-success" aria-hidden="true"></i>
     <{else}>
         <i class="fa fa-times text-danger" aria-hidden="true"></i>

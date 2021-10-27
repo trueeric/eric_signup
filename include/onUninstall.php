@@ -3,16 +3,16 @@
 // 如「資料表名」= actions，則「模組物件」= Actions
 
 //  反安裝前
-// function xoops_module_pre_uninstall_模組目錄($module)
-// {
-// }
+function xoops_module_pre_uninstall_eric_signup(XoopsModule $module)
+{
+}
 
 //  反安裝後
-// function xoops_module_uninstall_模組目錄($module)
-// {
-//     global $xoopsDB;
-//     $date = date("Ymd");
-//     rename(XOOPS_ROOT_PATH . "/uploads/模組目錄", XOOPS_ROOT_PATH . "/uploads/模組目錄_bak_{$date}");
+function xoops_module_uninstall_eric_signup(XoopsModule $module)
+{
+    global $xoopsDB;
+    $date = date("Ymd");
+    rename(XOOPS_ROOT_PATH . "/uploads/eric_signup", XOOPS_ROOT_PATH . "/uploads/eric_signup_bak_{$date}");
 
-//     return true;
-// }
+    return true;
+}

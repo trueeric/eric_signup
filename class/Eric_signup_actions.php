@@ -17,9 +17,9 @@ class Eric_signup_actions
     //列出所有資料
     public static function index($only_enable = true)
     {
-        global $xoopsTpl, $xoopsUser, $xoopsModulesConfig;
+        global $xoopsTpl, $xoopsUser;
 
-        $all_data = self::get_all($only_enable, false, $xoopsModulesConfig['show_number']);
+        $all_data = self::get_all($only_enable, false);
         // Utility::dd($all_data);
         $xoopsTpl->assign('all_data', $all_data);
 
@@ -251,23 +251,26 @@ class Eric_signup_actions
     }
 
     //取得所有資料陣列
-    public static function get_all($only_enable = true, $auto_key = false, $show_number = 20, $order = " , `action_date` desc ")
+    public static function get_all($only_enable = true, $auto_key = false, $show_number = 0, $order = " , `action_date` desc ")
     {
         global $xoopsDB, $xoopsModulesConfig, $xoopsTpl;
         $myts = \MyTextSanitizer::getInstance();
 
         $and_enable = $only_enable ? "and `enable`=1 and `end_date`>now() " : '';
+
+        $limit = $show_number ? " limit 0, $show_number " : '';
         // 把","放在$order內的考量是萬一$order為空值時，sql不會多一個","而發生錯誤
-        $sql = "select * from `" . $xoopsDB->prefix("eric_signup_actions") . "` where 1  $and_enable order by `enable` $order";
+        $sql = "select * from `" . $xoopsDB->prefix("eric_signup_actions") . "` where 1  $and_enable order by `enable` $order $limit ";
 
-        //Utility::getPageBar($原sql語法, 每頁顯示幾筆資料, 最多顯示幾個頁數選項);
-        $PageBar = Utility::getPageBar($sql, $show_number, 10);
-        $bar     = $PageBar['bar'];
-        $sql     = $PageBar['sql'];
-        $total   = $PageBar['total'];
-        $xoopsTpl->assign('bar', $bar);
-        $xoopsTpl->assign('total', $total);
-
+        if (!$show_number) {
+            //Utility::getPageBar($原sql語法, 每頁顯示幾筆資料, 最多顯示幾個頁數選項);
+            $PageBar = Utility::getPageBar($sql, $xoopsModulesConfig['show_number'], 10);
+            $bar     = $PageBar['bar'];
+            $sql     = $PageBar['sql'];
+            $total   = $PageBar['total'];
+            $xoopsTpl->assign('bar', $bar);
+            $xoopsTpl->assign('total', $total);
+        }
         $result   = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
         $data_arr = [];
         while ($data = $xoopsDB->fetchArray($result)) {

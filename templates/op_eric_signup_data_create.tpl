@@ -1,5 +1,5 @@
 <h2 class="my">報名表
-    <{if $action.enable && $action.number > $action.signup|@count  && $action.end_date|strtotime >= $smarty.now }>
+    <{if $action.enable && ($action.number + $action.candidate)  > $action.signup|@count  && $action.end_date|strtotime >= $smarty.now }>
         <i class="fa fa-check text-success" aria-hidden="true"></i>
     <{else}>
         <i class="fa fa-times text-danger" aria-hidden="true"></i>
@@ -17,6 +17,7 @@
     <small>
         <i class="fa fa-calendar" aria-hidden="true"></i>報名截止日期：<{$action.end_date}>
         <i class="fa fa-users" aria-hidden="true"></i>報名人數上限：<{$action.number}>
+        <{if $action.candidate}> <span data-toggle="tooltip" title="可侯補人數">(<{$action.candidate}>) </span><{/if}>
     </small>
 </h3>
 

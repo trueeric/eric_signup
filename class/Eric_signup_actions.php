@@ -91,9 +91,10 @@ class Eric_signup_actions
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
-        $uid    = (int) $uid;
-        $number = (int) $number;
-        $enable = (int) $enable;
+        $uid       = (int) $uid;
+        $number    = (int) $number;
+        $enable    = (int) $enable;
+        $candidate = (int) $candidate;
 
         $sql = "insert into `" . $xoopsDB->prefix("eric_signup_actions") . "` (
         `title`,
@@ -103,7 +104,8 @@ class Eric_signup_actions
         `number`,
         `setup`,
         `enable`,
-        `uid`
+        `uid`,
+        `candidate`
         ) values(
         '{$title}',
         '{$detail}',
@@ -112,7 +114,8 @@ class Eric_signup_actions
         '{$number}',
         '{$setup}',
         '{$enable}',
-        '{$uid}'
+        '{$uid}',
+        '{$candidate}'
         )";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
@@ -173,11 +176,11 @@ class Eric_signup_actions
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
-        $uid    = (int) $uid;
-        $number = (int) $number;
-        $enable = (int) $enable;
-
-        $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
+        $uid       = (int) $uid;
+        $number    = (int) $number;
+        $enable    = (int) $enable;
+        $candidate = (int) $candidate;
+        $now_uid   = $xoopsUser ? $xoopsUser->uid() : 0;
         // 需本人建立的或管理員才能改
         if ($now_uid != $uid && !$_SESSION['eric_signup-adm']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
@@ -191,7 +194,8 @@ class Eric_signup_actions
         `number` = '{$number}',
         `setup` = '{$setup}',
         `uid` = '{$uid}',
-        `enable` = '{$enable}'
+        `enable` = '{$enable}',
+        `candidate` = '{$candidate}'
         where `id` = '$id'";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 
@@ -309,9 +313,10 @@ class Eric_signup_actions
         foreach ($_POST as $var_name => $var_val) {
             $$var_name = $myts->addSlashes($var_val);
         }
-        $uid    = (int) $uid;
-        $number = (int) $number;
-        $enable = (int) $enable;
+        $uid       = (int) $uid;
+        $number    = (int) $number;
+        $enable    = (int) $enable;
+        $candidate = (int) $candidate;
 
         $sql = "insert into `" . $xoopsDB->prefix("eric_signup_actions") . "` (
         `title`,
@@ -321,7 +326,9 @@ class Eric_signup_actions
         `number`,
         `setup`,
         `enable`,
-        `uid`
+        `uid`,
+        `candidate`
+
         ) values(
         '{$action['title']}_copy',
         '{$action['detail']}',
@@ -330,7 +337,8 @@ class Eric_signup_actions
         '{$action['number']}',
         '{$action['setup']}',
         '0',
-        '{$uid}'
+        '{$uid}',
+        '{$action['candidate']}'
         )";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
 

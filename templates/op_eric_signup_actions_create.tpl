@@ -44,6 +44,14 @@
     </div>
     <div class="form-group row">
         <label class="col-sm-2 control-label col-form-label text-md-right">
+            侯補人數
+        </label>
+        <div class="col-sm-10">
+            <input type="number" name="candidate" id="candidate" class="form-control validate[required]" value="<{$candidate}>" placeholder="請輸入侯補人數">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 control-label col-form-label text-md-right">
             欄位設定
         </label>
         <div class="col-sm-10 ">

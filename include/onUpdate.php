@@ -1,93 +1,49 @@
 <?php
-/*
-function xoops_module_update_模組目錄(&$module, $old_version) {
-GLOBAL $xoopsDB;
 
-//if(!chk_chk1()) go_update1();
+use XoopsModules\Eric_signup\Update;
+use XoopsModules\Tadtools\Utility;
 
-return true;
-}
-
-//檢查某欄位是否存在
-function chk_chk1(){
-global $xoopsDB;
-$sql="select count(`欄位`) from ".$xoopsDB->prefix("資料表");
-$result=$xoopsDB->query($sql);
-if(empty($result)) return false;
-return true;
+if (!class_exists('XoopsModules\Tadtools\Utility')) {
+    require XOOPS_ROOT_PATH . '/modules/tadtools/preloads/autoloader.php';
 }
 
-//執行更新
-function go_update1(){
-global $xoopsDB;
-$sql="ALTER TABLE ".$xoopsDB->prefix("資料表")." ADD `欄位` smallint(5) NOT NULL";
-$xoopsDB->queryF($sql) or redirect_header(XOOPS_URL,3,  mysql_error());
-
-return true;
+if (!class_exists('XoopsModules\Eric_signup\Update')) {
+    require dirname(__DIR__) . '/preloads/autoloader.php';
 }
 
-//建立目錄
-function mk_dir($dir=""){
-//若無目錄名稱秀出警告訊息
-if(empty($dir))return;
-//若目錄不存在的話建立目錄
-if (!is_dir($dir)) {
-umask(000);
-//若建立失敗秀出警告訊息
-mkdir($dir, 0777);
-}
+// 更新前
+function xoops_module_pre_update_eric_signup(XoopsModule $module, $old_version)
+{
+    // 有上傳功能才需要
+    Utility::mk_dir(XOOPS_ROOT_PATH . "/uploads/eric_signup");
+
+    // 若有用到CKEditor編輯器才需要
+    Utility::mk_dir(XOOPS_ROOT_PATH . "/uploads/eric_signup/file");
+    Utility::mk_dir(XOOPS_ROOT_PATH . "/uploads/eric_signup/image");
+    Utility::mk_dir(XOOPS_ROOT_PATH . "/uploads/eric_signup/image/.thumbs");
+
+    $groupid = Update::mk_group("活動報名管理");
+    // 如果該群組權限已設定過，就不再設定，但重覆設定群組權限，老師說也沒關係
+    if (!$gperm_handler->checkRight($module->dirname(), 1, $groupid, $module->mid())) {
+        $perm_handler = xoops_getHandler('groupperm');
+        $perm         = $perm_handler->create();
+        $perm->setVar('gperm_groupid', $groupid);
+        $perm->setVar('gperm_itemid', 1);
+        $perm->setVar('gperm_name', $module->dirname()); //一般為模組目錄名稱
+        $perm->setVar('gperm_modid', $module->mid());
+        $perm_handler->insert($perm);
+        return true;
+    }
 }
 
-//拷貝目錄
-function full_copy( $source="", $target=""){
-if ( is_dir( $source ) ){
-@mkdir( $target );
-$d = dir( $source );
-while ( FALSE !== ( $entry = $d->read() ) ){
-if ( $entry == '.' || $entry == '..' ){
-continue;
-}
+// 更新後
+function xoops_module_update_eric_signup(XoopsModule $module, $old_version)
+{
+    global $xoopsDB;
 
-$Entry = $source . '/' . $entry;
-if ( is_dir( $Entry ) )    {
-full_copy( $Entry, $target . '/' . $entry );
-continue;
-}
-copy( $Entry, $target . '/' . $entry );
-}
-$d->close();
-}else{
-copy( $source, $target );
-}
-}
+    if (Update::chk_1()) {
+        Update::go_1();
+    }
 
-function rename_win($oldfile,$newfile) {
-if (!rename($oldfile,$newfile)) {
-if (copy ($oldfile,$newfile)) {
-unlink($oldfile);
-return TRUE;
+    return true;
 }
-return FALSE;
-}
-return TRUE;
-}
-
-function delete_directory($dirname) {
-if (is_dir($dirname))
-$dir_handle = opendir($dirname);
-if (!$dir_handle)
-return false;
-while($file = readdir($dir_handle)) {
-if ($file != "." && $file != "..") {
-if (!is_dir($dirname."/".$file))
-unlink($dirname."/".$file);
-else
-delete_directory($dirname.'/'.$file);
-}
-}
-closedir($dir_handle);
-rmdir($dirname);
-return true;
-}
-
- */

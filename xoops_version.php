@@ -92,14 +92,24 @@ $modversion['blocks'][] = [
     'options'     => '5|, `action_date` desc',
 ];
 
+$modversion['blocks'][] = [
+    'file'        => 'action_signup.php',
+    'name'        => '活動報名焦點',
+    'description' => '可選擇哪一個活動讓使用者報名',
+    'show_func'   => 'action_signup',
+    'template'    => 'action_signup.tpl',
+    'edit_func'   => 'action_signup_edit',
+    'options'     => '',
+];
+
 // $modversion['blocks'][] = [
-//     'file' =>  '區塊檔.php ';
-//     'name' => 區塊名稱（常數）;
-//     'description' => 區塊說明（常數）;
-//     'show_func' =>  '執行區塊函數名稱 ';
-//     'template' =>  '區塊樣板.tpl ';
-//     'edit_func' =>  '編輯區塊函數名稱 ';
-//     'options' =>  '設定值1|設定值2 ';
+//     'file' =>  '區塊檔.php ',
+//     'name' => 區塊名稱（常數）,
+//     'description' => 區塊說明（常數）,
+//     'show_func' =>  '執行區塊函數名稱 ',
+//     'template' =>  '區塊樣板.tpl ',
+//     'edit_func' =>  '編輯區塊函數名稱 ',
+//     'options' =>  '設定值1|設定值2 ',
 // ];
 
 //---評論---//

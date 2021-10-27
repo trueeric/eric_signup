@@ -4,9 +4,9 @@ use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Tadtools\Utility;
 
 // 可報名活動一覽
-function action_list()
+function action_list($options)
 {
-    $block = Eric_signup_actions::get_all(true);
+    $block = Eric_signup_actions::get_all(true, false, $options[0], $options[1]);
 
     // 樣板接收時一律用block
     return $block;

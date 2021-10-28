@@ -105,11 +105,25 @@ class Eric_signup_data
 
         //取得最後新增資料的流水編號
         $id = $xoopsDB->getInsertId();
-
         // setup資料寫入
         $EricDataCenter = new TadDataCenter('eric_signup');
         $EricDataCenter->set_col('id', $id);
         $EricDataCenter->saveData();
+
+        $action           = Eric_signup_actions::get($action_id, true);
+        $action['signup'] = self::get_all($action_id);
+        // Utility::dd($action);
+        if (count($action['signup']) > $action['number']) {
+            // 以下方法仍需資料綁定，變數名稱要換一下
+            $EricDataCenter->set_col('data_id', $id);
+            $EricDataCenter->saveCustomData(['tag' => ['侯補']]);
+            // $data_arr = [
+            //     'tag'       => [0 => '侯補'],
+            //     // $data_name2 => [0 => $data_value3],
+            // ];
+            // $TadDataCenter->saveCustomData($data_arr = []);
+        }
+
         return $id;
     }
 
@@ -256,6 +270,10 @@ class Eric_signup_data
             $EricDataCenter->set_col('id', $data['id']);
             $data['tdc']    = $EricDataCenter->getData();
             $data['action'] = Eric_signup_actions::get($data['action_id'], true);
+            // 抓出侯補資料
+            $EricDataCenter->set_col('data_id', $data['id']);
+            // 每人只會有一筆tag，tag只會有第0筆資料
+            $data['tag'] = $EricDataCenter->getData('tag', 0);
             // Utility::dd($data);
 
             if ($_SESSION['api_mode'] or $auto_key) {

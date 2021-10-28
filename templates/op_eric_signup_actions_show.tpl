@@ -65,14 +65,15 @@
                             <div class="text-muted">尚未設定</div>
                             <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_accept&id=<{$signup_data.id}>&action_id=<{$id}>&accept=0" class="btn btn-sm btn-warning">改成未錄取</a>
                             <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_accept&id=<{$signup_data.id}>&action_id=<{$id}>&accept=1" class="btn btn-sm btn-success">改成錄取</a>
-
-
                         <{/if}>
-
                     </td>>
                 <{/if}>
-
-                <td><{$signup_data.signup_date}></td>
+                <td>
+                    <{$signup_data.signup_date}><{$signup_data.tag}>
+                    <{if $signup_data.tag}>
+                        <div><span class="badge bg-primary text-dark"><{$signup_data.tag}></span></div>
+                    <{/if}>
+                </td>
             </tr>
         <{/foreach}>
     </tbody>

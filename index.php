@@ -4,6 +4,7 @@
 use Xmf\Request;
 use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Eric_signup\Eric_signup_data;
+use XoopsModules\Tadtools\TadUpFiles;
 use XoopsModules\Tadtools\Utility;
 
 /*-----------引入檔案區--------------*/
@@ -16,9 +17,16 @@ $op        = Request::getString('op');
 $id        = Request::getInt('id');
 $action_id = Request::getInt('action_id');
 $accept    = Request::getInt('accept');
+$files_sn  = Request::getInt('files_sn');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
+
+    // 下載檔案的switch，一定要加
+    case "tufdl":
+        $EricUpFiles = new TadUpFiles("eric_signup");
+        $EricUpFiles->add_file_counter($files_sn);
+        exit;
 
     //新增活動
     case 'eric_signup_actions_create':

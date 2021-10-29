@@ -11,6 +11,7 @@
 <div class="alert alert-info">
 <{$detail}>
 </div>
+<{$files}>
 
 
 <h3 class="my">

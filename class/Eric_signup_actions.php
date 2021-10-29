@@ -246,6 +246,11 @@ class Eric_signup_actions
         $EricUpFiles = new TadUpFiles("eric_signup");
         $EricUpFiles->set_col('action_id', $id);
         $EricUpFiles->del_files();
+
+        $TadUpFiles = new TadUpFiles("tad_signup");
+        $TadUpFiles->set_col('action_id', $id);
+        $TadUpFiles->del_files();
+
     }
 
     //以流水號取得某筆資料
@@ -271,6 +276,10 @@ class Eric_signup_actions
             // $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
             $data['title'] = $myts->htmlSpecialChars($data['title']);
         }
+        // 顯示上傳的檔案
+        $EricUpFiles = new TadUpFiles("eric_signup");
+        $EricUpFiles->set_col('action_id', $id);
+        $data['files'] = $EricUpFiles->show_files('upfile');
 
         return $data;
     }

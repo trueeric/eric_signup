@@ -221,6 +221,7 @@ class Eric_signup_data
 
             $EricDataCenter = new TadDataCenter('eric_signup');
             $EricDataCenter->set_col('id', $id);
+            // $EricDataCenter->set_col('data_id', $id);
             //deldata沒有指定，就是刪該筆所有的相關欄位
             $EricDataCenter->delData();
         } else {

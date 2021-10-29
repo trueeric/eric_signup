@@ -35,7 +35,7 @@ $modversion['system_menu'] = 1;
 
 //---模組資料表架構---//
 $modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
-$modversion['tables']           = ['eric_signup_actions', 'eric_signup_data', 'eric_signup_data_center'];
+$modversion['tables']           = ['eric_signup_actions', 'eric_signup_data', 'eric_signup_data_center', 'eric_signup_files_center'];
 
 //---後台管理介面設定---//
 $modversion['hasAdmin']   = 1;

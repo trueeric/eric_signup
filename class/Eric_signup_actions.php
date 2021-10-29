@@ -10,6 +10,7 @@ use XoopsModules\Tadtools\CkEditor;
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\My97DatePicker;
 use XoopsModules\Tadtools\SweetAlert;
+use XoopsModules\Tadtools\TadUpFiles;
 use XoopsModules\Tadtools\Utility;
 
 class Eric_signup_actions
@@ -41,7 +42,7 @@ class Eric_signup_actions
             //抓取預設值
             $db_values = empty($id) ? [] : self::get($id);
             // 需本人建立的或管理員才能改
-            if ($uid != $db_values['uid'] && $uid != $_SESSION['eric_signup-adm']) {
+            if ($uid != $db_values['uid'] && $uid != $_SESSION['eric_signup_adm']) {
                 redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
             }
             $db_values['number'] = empty($id) ? 50 : $db_values['number'];
@@ -72,6 +73,12 @@ class Eric_signup_actions
         $CkEditor = new CkEditor("eric_signup", "detail", $detail);
         $editor   = $CkEditor->render();
         $xoopsTpl->assign('editor', $editor);
+
+        $EricUpFiles = new TadUpFiles('eric_signup');
+        $EricUpFiles->set_col('action_id', $id);
+        $upform = $EricUpFiles->upform(true, 'upfile');
+        $xoopsTpl->assign('upform', $upform);
+
     }
 
     //新增資料
@@ -121,6 +128,10 @@ class Eric_signup_actions
 
         //取得最後新增資料的流水編號
         $id = $xoopsDB->getInsertId();
+
+        $EricUpFiles = new TadUpFiles("eric_signup");
+        $EricUpFiles->set_col('action_id', $id);
+        $EricUpFiles->upload_file('upfile', 1280, 240, null, null, true);
         return $id;
     }
 
@@ -182,7 +193,7 @@ class Eric_signup_actions
         $candidate = (int) $candidate;
         $now_uid   = $xoopsUser ? $xoopsUser->uid() : 0;
         // 需本人建立的或管理員才能改
-        if ($now_uid != $uid && !$_SESSION['eric_signup-adm']) {
+        if ($now_uid != $uid && !$_SESSION['eric_signup_adm']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
@@ -198,6 +209,10 @@ class Eric_signup_actions
         `candidate` = '{$candidate}'
         where `id` = '$id'";
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+
+        $EricUpFiles = new TadUpFiles("eric_signup");
+        $EricUpFiles->set_col('action_id', $id);
+        $EricUpFiles->upload_file('upfile', 1280, 240, null, null, true);
 
         return $id;
     }
@@ -217,7 +232,7 @@ class Eric_signup_actions
         $action  = self::get($id);
         $now_uid = $xoopsUser ? $xoopsUser->uid() : 0;
         // 需本人建立的或管理員才能改
-        if ($action['uid'] != $now_uid && !$_SESSION['eric_signup-adm']) {
+        if ($action['uid'] != $now_uid && !$_SESSION['eric_signup_adm']) {
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
 
@@ -225,6 +240,12 @@ class Eric_signup_actions
         where `id` = '{$id}'";
 
         $xoopsDB->queryF($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+
+        // 刪除上傳附檔
+
+        $EricUpFiles = new TadUpFiles("eric_signup");
+        $EricUpFiles->set_col('action_id', $id);
+        $EricUpFiles->del_files();
     }
 
     //以流水號取得某筆資料

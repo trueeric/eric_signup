@@ -69,7 +69,7 @@
                     </td>>
                 <{/if}>
                 <td>
-                    <{$signup_data.signup_date}><{$signup_data.tag}>
+                    <{$signup_data.signup_date}>
                     <{if $signup_data.tag}>
                         <div><span class="badge bg-primary text-dark"><{$signup_data.tag}></span></div>
                     <{/if}>

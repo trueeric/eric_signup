@@ -77,6 +77,15 @@
             </div>
         </div>
     </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 control-label col-form-label text-md-right">
+            上傳附件
+        </label>
+        <div class="col-sm-10 ">
+            <{$upform}>
+        </div>
+    </div>
     <{$token_form}>
         <input type="hidden" name="id" value="<{$id}>">
         <input type="hidden" name="uid" value="<{$uid}>">

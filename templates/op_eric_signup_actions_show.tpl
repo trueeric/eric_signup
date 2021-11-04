@@ -40,7 +40,7 @@
 
                     <td>
                         <{foreach from=$user_data item=data}>
-                            <{if ($smarty.session.can_add && $uid==$now_uid) || $signup_data.uid==$now_uid}>
+                            <{if ($smarty.session.can_add && $action.uid==$now_uid )|| $smarty.session.eric_signup_adm || $signup_data.uid==$now_uid}>
                                 <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_show&id=<{$signup_data.id}>"><div><{$data}></div></a>
 
                             <{else}>
@@ -54,7 +54,7 @@
                     </td>
 
                 <{/foreach}>
-                <{if $smarty.session.can_add && $uid==$now_uid}>
+                <{if ($smarty.session.can_add && $action.uid==$now_uid )|| $smarty.session.eric_signup_adm}>
                     <td>
                         <{if $signup_data.accept==='1'}>
                             <div class="text-primary">錄取</div>
@@ -81,9 +81,30 @@
 </table>
 
 
-<{if $smarty.session.can_add  && $uid==$now_uid}>
+<{if ($smarty.session.can_add && $action.uid == $now_uid) || $smarty.session.eric_signup_adm}>
     <div class="bar">
         <a href="javascript:del_action('<{$id}>')" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> 刪除活動</a>
         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_edit&id=<{$id}>" class="btn btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> 編輯活動</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>&type=signup" class="btn btn-primary"><i class="fa fa-file-o" aria-hidden="true"></i> 匯出報名名單csv</a>
     </div>
+
+    <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >
+        <div class="input-group">
+            <div class="input-group-prepend input-group-addon">
+                <span class="input-group-text">匯入報名名冊CSV</span>
+            </div>
+            <input type="file" name="csv" class="form-control" accept="text/csv">
+            <div class="input-group-append input-group-btn">
+                <input type="hidden" name="op" value="eric_signup_data_preview_csv">
+                <input type="hidden" name="id" value="<{$id}>">
+                <button type="submit" class="btn btn-primary">匯入CSV</button>
+                <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>" class="btn btn-secondary">下載範例格式</a>
+            </div>
+        </div>
+
+
+    </form>
+
+
+
 <{/if}>

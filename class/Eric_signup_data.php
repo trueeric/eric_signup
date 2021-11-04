@@ -494,4 +494,46 @@ class Eric_signup_data
 
     }
 
+    // 預覽匯入CSV
+    public static function preview_csv($action_id)
+    {
+
+        global $xoopsTpl;
+        if (!$_SESSION['can_add']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
+        $action = Eric_signup_actions::get($action_id);
+        $xoopsTpl->assign('action', $action);
+
+        // 製作標題
+        $head_row = explode("\n", $action['setup']);
+        $head     = $type     = [];
+        foreach ($head_row as $head_data) {
+            $cols = explode(',', $head_data);
+            if (strpos($cols[0], '#') === false) {
+                $head[] = str_replace('*', '', trim($cols[0]));
+                // 抓出第二個欄位的類型(文字、單、複選...)
+                $type[] = trim($cols[1]);
+
+            }
+        }
+        $head[] = '錄取';
+        $head[] = '報名日期';
+        $head[] = '身份';
+
+        $xoopsTpl->assign('head', $head);
+        $xoopsTpl->assign('type', $type);
+        // 抓取csv內容
+        $preview_data = [];
+        // csv與 匯入的.tpl中「input type="file" name="csv"」的name相關
+        $handle = fopen($_FILES['csv']['tmp_name'], "r") or die("無法開啟");
+        while (($val = fgetcsv($handle, 1000)) !== false) {
+            $preview_data[] = mb_convert_encoding($val, 'UTF-8', 'Big5');
+        }
+        fclose($handle);
+
+        $xoopsTpl->assign('preview_data', $preview_data);
+
+    }
+
 }

@@ -32,10 +32,11 @@
                     <{if $action.candidate}> <span data-toggle="tooltip" title="可侯補人數">(<{$action.candidate}>) </span><{/if}>
                 </td>
                 <td>
-                    <{if $smarty.session.can_add && ($action.uid==$now_uid || $smarty.session.eric_signup_adm )}>
+                    <{if ($smarty.session.can_add && $action.uid==$now_uid )|| $smarty.session.eric_signup_adm }>
 
                         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_edit&id=<{$action.id}>" class="btn btn-sm btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> 編輯活動</a>
                         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_copy&id=<{$action.id}>" class="btn btn-sm btn-primary"><i class="fa fa-copy" aria-hidden="true"></i> 複製活動</a>
+                        <a href="<{$xoops_url}>/modules/eric_signup/html.php?id=<{$action.id}>" class="btn btn-sm btn-warning"> <i class="fa fa-html5" aria-hidden="true"></i> 匯出 HTML</a>
 
                     <{ /if}>
 

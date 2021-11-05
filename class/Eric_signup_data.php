@@ -517,9 +517,10 @@ class Eric_signup_data
 
             }
         }
-        $head[] = '錄取';
-        $head[] = '報名日期';
-        $head[] = '身份';
+        // 不要出現 toc以外的欄位
+        // $head[] = '錄取';
+        // $head[] = '報名日期';
+        // $head[] = '身份';
 
         $xoopsTpl->assign('head', $head);
         $xoopsTpl->assign('type', $type);
@@ -534,6 +535,80 @@ class Eric_signup_data
 
         $xoopsTpl->assign('preview_data', $preview_data);
 
+        //加入Token安全機制
+        include_once $GLOBALS['xoops']->path('class/xoopsformloader.php');
+        $token      = new \XoopsFormHiddenToken();
+        $token_form = $token->render();
+        $xoopsTpl->assign("token_form", $token_form);
+
+    }
+
+    //批次匯入csv資料
+    public static function import_csv($action_id)
+    {
+        global $xoopsDB, $xoopsUser;
+
+        //XOOPS表單安全檢查,配合token
+        Utility::xoops_security_check();
+
+        // 確認管理者權限
+        if (!$_SESSION['can_add']) {
+            redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
+        }
+
+        $myts = \MyTextSanitizer::getInstance();
+
+        // get()已過濾，這裡丕用再重覆過濾
+        // foreach ($_POST as $var_name => $var_val) {
+        //     $$var_name = $myts->addSlashes($var_val);
+        // }
+
+        $action_id = (int) ($action_id);
+        $uid       = $xoopsUser->uid();
+
+        // 取得活動報名人數上限
+        $action = Eric_signup_actions::get($action_id, true);
+
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        foreach ($_POST['tdc'] as $tdc) {
+
+            // 匯入即錄取，accept直接給1
+            $sql = "insert into `" . $xoopsDB->prefix("eric_signup_data") . "` (
+            `action_id`,
+            `uid`,
+            `signup_date`,
+            `accept`
+            ) values(
+            '{$action_id}',
+            '{$uid}',
+            now(),
+            '1'
+            )";
+            $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);
+
+            //取得最後新增資料的流水編號
+            $id = $xoopsDB->getInsertId();
+
+            // setup資料寫入
+            $EricDataCenter->set_col('id', $id);
+            // 這個只會一次存一筆要換，要換下下行的寫法
+            // $EricDataCenter->saveData();
+            $EricDataCenter->saveCustomData($tdc);
+
+            $action['signup'] = self::get_all($action_id);
+            // Utility::dd($action);
+            if (count($action['signup']) > $action['number']) {
+                // 以下方法仍需資料綁定，變數名稱要換一下
+                $EricDataCenter->set_col('data_id', $id);
+                $EricDataCenter->saveCustomData(['tag' => ['侯補']]);
+                // $data_arr = [
+                //     'tag'       => [0 => '侯補'],
+                //     // $data_name2 => [0 => $data_value3],
+                // ];
+                // $TadDataCenter->saveCustomData($data_arr = []);
+            }
+
+        }
     }
 
 }

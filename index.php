@@ -121,6 +121,13 @@ switch ($op) {
         Eric_signup_data::preview_csv($id);
         break;
 
+    //批次匯入報名資料csv
+    case 'eric_signup_data_import_csv':
+        Eric_signup_data::import_csv($id);
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功匯入報名資料csv！");
+        break;
+
     default:
         if (empty($id)) {
             Eric_signup_actions::index($xoopsModuleConfig['only_enable']);

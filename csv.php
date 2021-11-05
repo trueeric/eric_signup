@@ -33,10 +33,11 @@ foreach ($head_row as $head_data) {
     }
 
 }
-$head[] = '錄取';
-$head[] = '報名日期';
-$head[] = '身份';
-$csv[]  = implode(',', $head);
+// 為免後續匯入者困擾，csv只產生tdc的欄位就好
+// $head[] = '錄取';
+// $head[] = '報名日期';
+// $head[] = '身份';
+$csv[] = implode(',', $head);
 
 if ($type == 'signup') {
     $signup = Eric_signup_data::get_all($action['id']);
@@ -47,16 +48,17 @@ if ($type == 'signup') {
             $item[] = implode('|', $user_data);
         }
 
-        if ($signup_data['accept'] === '1') {
-            $item[] = '錄取';
-        } elseif ($signup_data['accept'] === '0') {
-            $item[] = '未錄取';
-        } else {
-            $item[] = '尚未設定';
-        }
-        $item[] = $signup_data['signup_date'];
-        $item[] = $signup_data['signup_tag'];
-        $csv[]  = implode(',', $item);
+        // 為免後續匯入者困擾，csv只產生tdc的欄位就好
+        // if ($signup_data['accept'] === '1') {
+        //     $item[] = '錄取';
+        // } elseif ($signup_data['accept'] === '0') {
+        //     $item[] = '未錄取';
+        // } else {
+        //     $item[] = '尚未設定';
+        // }
+        // $item[] = $signup_data['signup_date'];
+        // $item[] = $signup_data['signup_tag'];
+        $csv[] = implode(',', $item);
     }
 
 }

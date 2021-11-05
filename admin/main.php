@@ -8,7 +8,7 @@ use XoopsModules\Eric_signup\Eric_signup_actions;
 $GLOBALS['xoopsOption']['template_main'] = 'eric_signup_admin.tpl';
 require_once __DIR__ . '/header.php';
 require_once dirname(__DIR__) . '/function.php';
-$_SESSION['Eric_signup_adm'] = true;
+$_SESSION['eric_signup_adm'] = true;
 $_SESSION['can_add']         = true;
 /*-----------變數過濾----------*/
 $op = Request::getString('op');

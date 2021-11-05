@@ -17,7 +17,7 @@ $type   = Request::getString('type');
 $action = Eric_signup_actions::get($id);
 
 // 限制本人或管理者使用
-if ($action['uid'] != $xoopsUser->uid() && $action['uid'] != $_SESSION['Eric_signup_adm']) {
+if ($action['uid'] != $xoopsUser->uid() && $action['uid'] != $_SESSION['eric_signup_adm']) {
     redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
 }
 

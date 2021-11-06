@@ -10,23 +10,46 @@
         </thead>
         <tbody>
             <{foreach from=$preview_data key=i item=data name=preview_data}>
-                <{if $smarty.foreach.preview_data.iteration>1}>
+                <{if $smarty.foreach.preview_data.iteration>1}> <!--{*從第2列開始取 *} -->
                     <tr>
                         <{foreach from=$data key=j item=val}>
                             <{assign var=title value=$head.$j}>
                             <{assign var=input_type value=$type.$j}>
+                            <{assign var=input_options value=$options.$j}><!--{* checkbox預設選項 *} -->
                             <{if $title!=''}>
                                 <td>
+
+                                    <!--{* checkbox *} -->
                                     <{if $input_type=="checkbox"}>
                                         <{assign var=var_arr value='|'|explode:$val}>
-                                        <{foreach from=$var_arr  item=val }>
+                                        <{foreach from=$input_options item=opt}> <!--{* 取checkbox預設選項 *} -->
 
                                             <div class="form-check-inline checkbox-inline">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" name="tdc[<{$i}>][<{$title}>][]" value="<{$val}>" checked><{$val}>
+                                                    <input class="form-check-input" type="checkbox" name="tdc[<{$i}>][<{$title}>][]" value="<{$opt}>" <{if $opt|in_array:$var_arr}>checked<{/if}>><{$opt}>  <!--{* 如果預設選項出現在var_arr則顯示checked *} -->
                                                 </label>
                                             </div>
                                         <{/foreach}>
+
+                                    <!--{* radio *} -->
+                                    <{elseif $input_type=="radio"}>
+                                        <{foreach from=$input_options item=opt}> <!--{* 取radio預設選項 *} -->
+
+                                            <div class="form-check-inline radio-inline">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="tdc[<{$i}>][<{$title}>]" value="<{$opt}>" <{if $opt==$val}>checked<{/if}>><{$opt}>  <!--{* checkbox要多一層[] radio和select 不用 *} -->
+                                                </label>
+                                            </div>
+                                        <{/foreach}>
+
+                                    <!--{* select *} -->
+                                    <{elseif $input_type=="select"}>
+
+                                        <select name="tdc[<{$i}>][<{$title}>]"  class="form-control validate[required]" >
+                                            <{foreach from=$input_options item=opt}>
+                                                <option value="<{$opt}>" <{if $opt==$val}>selected<{/if}>><{$opt}></option>
+                                            <{/foreach}>
+                                        </select>
 
                                     <{else}>
                                         <input type="text" name="tdc[<{$i}>][<{$title}>]" value="<{$val}>" class="form-control form-control-sm">
@@ -40,7 +63,6 @@
 
                 <{/if}>
             <{/foreach}>
-        </tbody>
     </table>
     <{$token_form}>
     <input type="hidden" name="id" value="<{$action.id}>">

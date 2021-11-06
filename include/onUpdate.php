@@ -32,7 +32,7 @@ function xoops_module_pre_update_eric_signup(XoopsModule $module, $old_version)
         $perm->setVar('gperm_itemid', 1);
         $perm->setVar('gperm_name', $module->dirname()); //一般為模組目錄名稱
         $perm->setVar('gperm_modid', $module->mid());
-        $perm_handler->insert($perm);
+        $gperm_handler->insert($perm);
     }
     return true;
 

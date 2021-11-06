@@ -224,6 +224,10 @@ class Eric_signup_data
             // $EricDataCenter->set_col('data_id', $id);
             //deldata沒有指定，就是刪該筆所有的相關欄位
             $EricDataCenter->delData();
+
+            // 刪額外的欄位「侯補」的資料
+            $EricDataCenter->set_col('data_id', $id);
+            $EricDataCenter->delData();
         } else {
             Utility::web_error($sql, __FILE__, __LINE__);
         }
@@ -503,27 +507,31 @@ class Eric_signup_data
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
         $action = Eric_signup_actions::get($action_id);
+
         $xoopsTpl->assign('action', $action);
 
         // 製作標題
+        /* 舊的寫法
         $head_row = explode("\n", $action['setup']);
         $head     = $type     = [];
         foreach ($head_row as $head_data) {
-            $cols = explode(',', $head_data);
-            if (strpos($cols[0], '#') === false) {
-                $head[] = str_replace('*', '', trim($cols[0]));
-                // 抓出第二個欄位的類型(文字、單、複選...)
-                $type[] = trim($cols[1]);
+        $cols = explode(',', $head_data);
+        if (strpos($cols[0], '#') === false) {
+        $head[] = str_replace('*', '', trim($cols[0]));
+        // 抓出第二個欄位的類型(文字、單、複選...)
+        $type[] = trim($cols[1]);
 
-            }
+        }
         }
         // 不要出現 toc以外的欄位
         // $head[] = '錄取';
         // $head[] = '報名日期';
         // $head[] = '身份';
-
+         */
+        list($head, $type, $options) = self::get_head($action, true, true);
         $xoopsTpl->assign('head', $head);
         $xoopsTpl->assign('type', $type);
+        $xoopsTpl->assign('options', $options);
         // 抓取csv內容
         $preview_data = [];
         // csv與 匯入的.tpl中「input type="file" name="csv"」的name相關
@@ -532,7 +540,6 @@ class Eric_signup_data
             $preview_data[] = mb_convert_encoding($val, 'UTF-8', 'Big5');
         }
         fclose($handle);
-
         $xoopsTpl->assign('preview_data', $preview_data);
 
         //加入Token安全機制
@@ -623,24 +630,27 @@ class Eric_signup_data
         $xoopsTpl->assign('action', $action);
 
         // 製作標題
+        /* 舊的寫法
         $head_row = explode("\n", $action['setup']);
         $head     = $type     = [];
         foreach ($head_row as $head_data) {
-            $cols = explode(',', $head_data);
-            if (strpos($cols[0], '#') === false) {
-                $head[] = str_replace('*', '', trim($cols[0]));
-                // 抓出第二個欄位的類型(文字、單、複選...)
-                $type[] = trim($cols[1]);
+        $cols = explode(',', $head_data);
+        if (strpos($cols[0], '#') === false) {
+        $head[] = str_replace('*', '', trim($cols[0]));
+        // 抓出第二個欄位的類型(文字、單、複選...)
+        $type[] = trim($cols[1]);
 
-            }
         }
-        // 不要出現 toc以外的欄位
-        // $head[] = '錄取';
-        // $head[] = '報名日期';
-        // $head[] = '身份';
+        }
+
+         */
+
+        list($head, $type, $options) = self::get_head($action, true, true);
 
         $xoopsTpl->assign('head', $head);
         $xoopsTpl->assign('type', $type);
+        $xoopsTpl->assign('options', $options);
+
         // 抓取excel內容
         $preview_data = [];
 
@@ -667,6 +677,27 @@ class Eric_signup_data
         $token      = new \XoopsFormHiddenToken();
         $token_form = $token->render();
         $xoopsTpl->assign("token_form", $token_form);
+
+    }
+
+    //取得報名的標題欄
+    public static function get_head($action, $return_type = false, $only_tdc = false)
+    {
+        $EricDataCenter = new TadDataCenter('tad_signup');
+        $head           = $EricDataCenter->getAllColItems($action['setup'], 'label');
+        $type           = $EricDataCenter->getAllColItems($action['setup'], 'type');
+        $options        = $EricDataCenter->getAllColItems($action['setup'], 'options');
+
+        if (!$only_tdc) {
+            $head[] = _MD_TAD_SIGNUP_ACCEPT;
+            $head[] = _MD_TAD_SIGNUP_APPLY_DATE;
+            $head[] = _MD_TAD_SIGNUP_IDENTITY;
+        }
+        if ($return_type) {
+            return [$head, $type, $options];
+        } else {
+            return $head;
+        }
 
     }
     // 將文字轉為數字

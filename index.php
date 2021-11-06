@@ -128,6 +128,18 @@ switch ($op) {
         redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功匯入報名資料csv！");
         break;
 
+    // 匯入報名名冊excel
+    case 'eric_signup_data_preview_excel':
+        Eric_signup_data::preview_excel($id);
+        break;
+
+    //批次匯入報名資料EXCEL
+    case 'eric_signup_data_import_excel':
+        Eric_signup_data::import_excel($id);
+        // header("location: {$_SERVER['PHP_SELF']}?id=$id");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功匯入報名資料csv！");
+        break;
+
     default:
         if (empty($id)) {
             Eric_signup_actions::index($xoopsModuleConfig['only_enable']);

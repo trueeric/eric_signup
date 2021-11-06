@@ -29,6 +29,54 @@ require_once XOOPS_ROOT_PATH . '/modules/tadtools/vendor/phpoffice/phpexcel/Clas
 $objPHPExcel = new PHPExcel(); //實體化Excel
 
 //----------內容-----------//
+
+//設定預設工作表中一個儲存格的外觀
+$head_style = [
+    'font'      => [
+        'bold'  => true,
+        'color' => ['rgb' => '000000'],
+        // 'size' => 12,
+        'name'  => '新細明體',
+    ],
+    'alignment' => [
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+    ],
+    'fill'      => [
+        'type'  => PHPExcel_Style_Fill::FILL_SOLID,
+        'color' => ['rgb' => 'cfcfcf'],
+    ],
+    'borders'   => [
+        'allborders' => [
+            'style' => PHPExcel_Style_Border::BORDER_THIN,
+            'color' => ['rgb' => '000000'],
+        ],
+    ],
+];
+
+//excel 內容樣式
+$content_style = [
+    'font'      => [
+        'bold'  => false,
+        'color' => ['rgb' => '000000'],
+        // 'size' => 12,
+        'name'  => '新細明體',
+    ],
+    'alignment' => [
+        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+        'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+    ],
+    // 'fill' => [
+    //     'type' => PHPExcel_Style_Fill::FILL_SOLID,
+    //     'color' => ['rgb' => 'ffffff'],
+    // ],
+    'borders'   => [
+        'allborders' => [
+            'style' => PHPExcel_Style_Border::BORDER_THIN,
+            'color' => ['rgb' => '000000'],
+        ],
+    ],
+];
 $title = "{$action['title']}報名名單";
 // Utility::dd($title);
 
@@ -57,6 +105,13 @@ $row    = 1;
 
 foreach ($head as $column => $value) {
     $objActSheet->setCellValueByColumnAndRow($column, 1, $value); //直欄從0開始，橫列從1開始
+    $objActSheet->getStyleByColumnAndRow($column, $row)->applyFromArray($head_style);
+    $len = strlen($value);
+    if (!isset($_session['length'][$column])) {
+        $_session['length'][$column] = $len;
+        $objActSheet->getColumnDimensionByColumn($column)->setWidth($len);
+    }
+
 }
 
 // 抓出內容
@@ -82,6 +137,13 @@ if ($type == 'signup') {
         $row++;
         foreach ($item as $column => $value) {
             $objActSheet->setCellValueByColumnAndRow($column, $row, $value); //直欄從0開始，橫列從1開始
+            $objActSheet->getStyleByColumnAndRow($column, $row)->applyFromArray($content_style);
+            $len = strlen($value);
+            if (!isset($_session['length'][$column]) || $len > $_session['length'][$column]) {
+                $_session['length'][$column] = $len;
+                $objActSheet->getColumnDimensionByColumn($column)->setWidth($len);
+            }
+
         }
     }
 }
@@ -105,3 +167,6 @@ $objWriter->setPreCalculateFormulas(false);
 // 輸出及下載
 $objWriter->save('php://output');
 exit;
+
+// 清掉 session的 length 紀錄
+unset($_SESSION['length']);

@@ -102,8 +102,21 @@
                 <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>" class="btn btn-secondary">下載範例格式</a>
             </div>
         </div>
+    </form>
 
-
+    <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >
+        <div class="input-group">
+            <div class="input-group-prepend input-group-addon">
+                <span class="input-group-text">匯入報名名冊EXCEL</span>
+            </div>
+            <input type="file" name="excel" class="form-control" accept=".xlsx">
+            <div class="input-group-append input-group-btn">
+                <input type="hidden" name="op" value="eric_signup_data_preview_excel">
+                <input type="hidden" name="id" value="<{$id}>">
+                <button type="submit" class="btn btn-primary">匯入EXCEL</button>
+                <a href="<{$xoops_url}>/modules/eric_signup/excel.php?id=<{$id}>" class="btn btn-secondary"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 下載範例格式</a>
+            </div>
+        </div>
     </form>
 
 

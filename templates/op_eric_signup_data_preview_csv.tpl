@@ -1,4 +1,14 @@
 <h2 class="my">匯入「<{$action.title}>」報名資料預覽</h2>
+<!-- {*本次匯入筆數，需扣標題列，因smarty關係，每次只能處關係，每次只能處理簡單運算，所以需分2列處理*} -->
+<{assign var=import_number value=$preview_data|@count}>
+<{assign var=import_number value=$import_number-1}>
+
+<div class="alert alert-<{if $import_number+$action.signup_count>$action.number+$action.condidate}>danger<{else}>sucess<{/if}>">
+    可報名數：<{$action.number}> 人，
+    可侯補數：<{$action.condidate}> 人，
+    已報名數：<{$action.signup_count}> 人，
+    欲匯入數：<{$import_number}> 人
+</div>
 <form action="index.php" method="post" id="myForm"  >
     <table class="table table-bordered table-sm">
         <thead>

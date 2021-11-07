@@ -507,7 +507,8 @@ class Eric_signup_data
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
         $action = Eric_signup_actions::get($action_id);
-
+        // 目前報名人數
+        $action['signup_count'] = count(Eric_signup_actions::get_all($action_id));
         $xoopsTpl->assign('action', $action);
 
         // 製作標題
@@ -627,6 +628,8 @@ class Eric_signup_data
             redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能!");
         }
         $action = Eric_signup_actions::get($action_id);
+        // 目前報名人數
+        $action['signup_count'] = count(Eric_signup_actions::get_all($action_id));
         $xoopsTpl->assign('action', $action);
 
         // 製作標題

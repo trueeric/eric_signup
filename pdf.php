@@ -1,6 +1,7 @@
 <?php
 use Xmf\Request;
 use XoopsModules\Eric_signup\Eric_signup_actions;
+use XoopsModules\Tadtools\Utility;
 
 /*-----------引入檔案區--------------*/
 require_once __DIR__ . '/header.php';
@@ -23,8 +24,10 @@ $type = Request::getString('type');
 
 $action = Eric_signup_actions::get($id);
 
-if ($action['uid'] != $xoopsUser->uid()) {
+if ($action['uid'] != $xoopsUser->uid() && $action['uid'] != $_SESSION['eric_signup_adm']) {
     redirect_header($_SERVER['PHP_SELF'], 3, "您沒有權限使用此功能");
 }
-
-$pdf->Output("{$action['title']}.pdf", 'D');
+// Utility::dd($action['title']);
+$file_name_conv = iconv('UTF-8', 'Big5', $action['title']);
+$pdf->Output("{$file_name_conv}.pdf", 'D');
+// $pdf->Output("王12小.pdf", 'D');

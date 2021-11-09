@@ -65,7 +65,7 @@ foreach ($signup as $signup_data) {
 
 $html[] = "</table>";
 
-$html_content[] = implode('', $html);
+$html_content = implode('', $html);
 // Utility::dd($html_content);
 
 $pdf = new TCPDF("L", "mm", "A4", true, "UTF-8", false);
@@ -78,6 +78,6 @@ $pdf->SetMargins(15, 15); //設定頁面邊界，
 $pdf->AddPage(); //新增頁面，一定要有，否則內容出不來
 
 $pdf->writeHTML($html_content);
-$file_name_conv = iconv('UTF-8', 'Big5', $title);
-$pdf->Output("{$file_name_conv}.pdf", 'I');
-// $pdf->Output("1234.pdf", "I");
+// $file_name_conv = iconv('UTF-8', 'Big5', $title);
+// $pdf->Output("{$file_name_conv}.pdf", 'I');
+$pdf->Output("{$title}.pdf", "D");

@@ -95,6 +95,11 @@
         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_edit&id=<{$id}>" class="btn btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> 編輯活動</a>
         <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>&type=signup" class="btn btn-primary"><i class="fa fa-file-o" aria-hidden="true"></i> 匯出報名名單 CSV</a>
         <a href="<{$xoops_url}>/modules/eric_signup/excel.php?id=<{$id}>&type=signup" class="btn btn-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出報名名單 EXCEL</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/pdf.php?id=<{$id}>" class="btn btn-success"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> 匯出報名名單 PDF</a>
+    </div>
+
+    <div class="bar">
+        <a href="<{$xoops_url}>/modules/eric_signup/pdf_signup.php?id=<{$id}>" class="btn btn-success"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> 匯出簽到 PDF</a>
     </div>
 
     <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >

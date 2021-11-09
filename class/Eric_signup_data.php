@@ -251,18 +251,19 @@ class Eric_signup_data
     }
 
     //取得所有資料陣列
-    public static function get_all($action_id = '', $uid = '', $auto_key = false)
+    public static function get_all($action_id = '', $uid = '', $auto_key = false, $only_accept = false)
     {
         global $xoopsDB, $xoopsUser;
-        $myts = \MyTextSanitizer::getInstance();
+        $myts       = \MyTextSanitizer::getInstance();
+        $and_accept = $only_accept ? " and `accept`='1' " : "";
 
         if ($action_id) {
-            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' order by `signup_date` ";
+            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `action_id`= '$action_id' $and_accept order by `signup_date` ";
         } else {
             if (!$_SESSION['can_add'] or !$uid) {
                 $uid = $xoopsUser ? $xoopsUser->uid() : 0;
             }
-            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `uid`= '$uid' order by `signup_date` ";
+            $sql = "select * from `" . $xoopsDB->prefix("eric_signup_data") . "` where `uid`= '$uid' $and_accept order by `signup_date` ";
         }
 
         $result   = $xoopsDB->query($sql) or Utility::web_error($sql, __FILE__, __LINE__);

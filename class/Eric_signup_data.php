@@ -721,4 +721,24 @@ class Eric_signup_data
         self::import_csv($action_id);
     }
 
+    //取得標題欄資料
+    // public static function get_head($action,$return_type=false)
+    // {
+    //     $head_row = explode("\n", $action['setup']);
+    //     $head     =$type= [];
+    //     foreach ($head_row as $head_data) {
+    //         $cols = explode(',', $head_data);
+    //         if (strpos($cols[0], '#') === false) {
+    //             $head[] = str_replace('*', '', trim($cols[0]));
+
+    //         }
+
+    //     }
+
+    //     $head[] = '錄取';
+    //     $head[] = '報名日期';
+    //     $head[] = '身份';
+    //     return $head;
+    // }
+
 }

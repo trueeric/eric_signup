@@ -23,20 +23,8 @@ if ($action['uid'] != $xoopsUser->uid() && $action['uid'] != $_SESSION['eric_sig
 
 $csv = [];
 
-$head_row = explode("\n", $action['setup']);
-$head     = [];
-foreach ($head_row as $head_data) {
-    $cols = explode(',', $head_data);
-    if (strpos($cols[0], '#') === false) {
-        $head[] = str_replace('*', '', trim($cols[0]));
+$head = Eric_signup_data::get_head($action);
 
-    }
-
-}
-// 為免後續匯入者困擾，csv只產生tdc的欄位就好
-// $head[] = '錄取';
-// $head[] = '報名日期';
-// $head[] = '身份';
 $csv[] = implode(',', $head);
 
 if ($type == 'signup') {

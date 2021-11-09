@@ -86,20 +86,8 @@ $objActSheet->setTitle($title); //設定工作表名稱
 $objPHPExcel->createSheet(); //建立新的工作表，上面那三行再來一次，編號要改
 
 // 抓出標題資料
-$head_row = explode("\n", $action['setup']);
-$head     = [];
-foreach ($head_row as $head_data) {
-    $cols = explode(',', $head_data);
-    if (strpos($cols[0], '#') === false) {
-        $head[] = str_replace('*', '', trim($cols[0]));
-
-    }
-}
-// 為免後續匯入者困擾，如有必要只產生tdc的欄位就好
-$head[] = '錄取';
-$head[] = '報名日期';
-$head[] = '身份';
-$row    = 1;
+$head = Eric_signup_data::get_head($action);
+$row  = 1;
 
 // Utility::dd($head);
 

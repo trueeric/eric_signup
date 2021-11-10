@@ -60,4 +60,4 @@ foreach ($signup as $signup_data) {
 
 $pdf->writeHTML($html_content);
 
-$pdf->Output("{$title}.pdf", "I");
+$pdf->Output("{$title}.pdf", "D");

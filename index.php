@@ -13,11 +13,12 @@ $GLOBALS['xoopsOption']['template_main'] = 'eric_signup_index.tpl';
 require_once XOOPS_ROOT_PATH . '/header.php';
 
 /*-----------變數過濾----------*/
-$op        = Request::getString('op');
-$id        = Request::getInt('id');
-$action_id = Request::getInt('action_id');
-$accept    = Request::getInt('accept');
-$files_sn  = Request::getInt('files_sn');
+$op            = Request::getString('op');
+$id            = Request::getInt('id');
+$action_id     = Request::getInt('action_id');
+$accept        = Request::getInt('accept');
+$files_sn      = Request::getInt('files_sn');
+$pdf_setup_col = Request::getString('pdf_setup_col');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
@@ -144,6 +145,13 @@ switch ($op) {
     case 'eric_signup_data_pdf_setup':
         Eric_signup_data::pdf_setup($id);
         break;
+
+    // 儲存pdf的匯出設定
+    case 'eric_signup_data_pdf_setup_save':
+        Eric_signup_data::pdf_setup_save($action_id, $pdf_setup_col);
+        header("location:pdf_signup.php?id=$action_id");
+        // 本處需要用exit中斷執行
+        exit;
 
     default:
         if (empty($id)) {

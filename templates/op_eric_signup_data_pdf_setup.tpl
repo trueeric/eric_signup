@@ -2,7 +2,7 @@
 <form action="index.php" method="post" id="myForm" enctype="multipart/form-data" class="form-horizontal">
 
     <{$tmt_box}>
-    <input type="hidden" name="op" value="eric_signup_pdf_setup_save">
+    <input type="hidden" name="op" value="eric_signup_data_pdf_setup_save">
     <input type="hidden" name="action_id" value="<{$action.id}>">
     <div class="bar">
         <button type="submit" class="btn btn-primary">

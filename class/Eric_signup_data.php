@@ -749,15 +749,28 @@ class Eric_signup_data
         $action = Eric_signup_actions::get($action_id);
         $xoopsTpl->assign('action', $action);
 
-        // 製作標題
-        $from_arr = self::get_head($action);
-        $xoopsTpl->assign('head_arr', $head_arr);
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        $EricDataCenter->set_col('pdf_setup_id', $action_id);
+        // 第2個參數0代表只抓該筆的完整資料
+        $pdf_setup_col = $EricDataCenter->getData('pdf_setup_id', 0);
+        $to_arr        = explode(',', $pdf_setup_col);
 
-        $to_arr = $hidden_arr = [];
+        // 製作標題
+        $head_arr   = self::get_head($action);
+        $from_arr   = array_diff($head_arr, $to_arr);
+        $hidden_arr = [];
 
         $tmt_box = Tmt::render('pdf_setup_col', $from_arr, $to_arr, $hidden_arr, true, false);
         // Utility::dd($tmt_box);
         $xoopsTpl->assign('tmt_box', $tmt_box);
+    }
+
+    //進行pdf的匯出設定
+    public static function pdf_setup_save($action_id, $pdf_setup_col = '')
+    {
+        $EricDataCenter = new TadDataCenter('eric_signup');
+        $EricDataCenter->set_col('pdf_setup_id', $action_id);
+        $EricDataCenter->saveCustomData(['pdf_setup_id' => [$pdf_setup_col]]);
     }
 
 }

@@ -1,4 +1,4 @@
-<h2 class="my"><{$action_title}>簽到表欄位定</h2>
+<h2 class="my">「<{$action.title}>」簽到表欄位設定</h2>
 <form action="index.php" method="post" id="myForm" enctype="multipart/form-data" class="form-horizontal">
 
     <{$tmt_box}>

@@ -9,6 +9,7 @@ use XoopsModules\Tadtools\BootstrapTable;
 use XoopsModules\Tadtools\FormValidator;
 use XoopsModules\Tadtools\SweetAlert;
 use XoopsModules\Tadtools\TadDataCenter;
+use XoopsModules\Tadtools\Tmt;
 use XoopsModules\Tadtools\Utility;
 
 class Eric_signup_data
@@ -693,9 +694,9 @@ class Eric_signup_data
         $options        = $EricDataCenter->getAllColItems($action['setup'], 'options');
 
         if (!$only_tdc) {
-            $head[] = _MD_TAD_SIGNUP_ACCEPT;
-            $head[] = _MD_TAD_SIGNUP_APPLY_DATE;
-            $head[] = _MD_TAD_SIGNUP_IDENTITY;
+            $head[] = '錄取'; //_MD_TAD_SIGNUP_ACCEPT;
+            $head[] = '報名日期'; //_MD_TAD_SIGNUP_APPLY_DATE;
+            $head[] = '身份'; //_MD_TAD_SIGNUP_IDENTITY;
         }
         if ($return_type) {
             return [$head, $type, $options];
@@ -740,5 +741,23 @@ class Eric_signup_data
     //     $head[] = '身份';
     //     return $head;
     // }
+
+    //進行pdf的匯出設定
+    public static function pdf_setup($action_id)
+    {
+        global $xoopsTpl;
+        $action = Eric_signup_actions::get($action_id);
+        $xoopsTpl->assign('action', $action);
+
+        // 製作標題
+        $from_arr = self::get_head($action);
+        $xoopsTpl->assign('head_arr', $head_arr);
+
+        $to_arr = $hidden_arr = [];
+
+        $tmt_box = Tmt::render('pdf_setup_col', $from_arr, $to_arr, $hidden_arr, true, false);
+        // Utility::dd($tmt_box);
+        $xoopsTpl->assign('tmt_box', $tmt_box);
+    }
 
 }

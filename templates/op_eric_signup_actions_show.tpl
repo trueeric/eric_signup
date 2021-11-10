@@ -99,7 +99,7 @@
     </div>
 
     <div class="bar">
-        <a href="<{$xoops_url}>/modules/eric_signup/pdf_signup.php?id=<{$id}>" class="btn btn-success"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> 匯出簽到 PDF</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_pdf_setup&id=<{$id}>" class="btn btn-success"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> 匯出簽到表 PDF</a>
     </div>
 
     <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >

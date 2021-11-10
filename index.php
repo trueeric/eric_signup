@@ -140,6 +140,11 @@ switch ($op) {
         redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功匯入報名資料csv！");
         break;
 
+    // 進行pdf的匯出設定
+    case 'eric_signup_data_pdf_setup':
+        Eric_signup_data::pdf_setup($id);
+        break;
+
     default:
         if (empty($id)) {
             Eric_signup_actions::index($xoopsModuleConfig['only_enable']);

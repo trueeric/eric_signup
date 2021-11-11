@@ -68,6 +68,6 @@ foreach ($signup as $signup_data) {
     $i++;
 }
 
-$pdf->writeHTML($html_content);
+// $pdf->writeHTML($html_content);
 
 $pdf->Output("{$title}.pdf", "D");

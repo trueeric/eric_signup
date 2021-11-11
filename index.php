@@ -19,6 +19,7 @@ $action_id     = Request::getInt('action_id');
 $accept        = Request::getInt('accept');
 $files_sn      = Request::getInt('files_sn');
 $pdf_setup_col = Request::getString('pdf_setup_col');
+$file          = Request::getWord('file', 'pdf');
 
 /*-----------執行動作判斷區----------*/
 switch ($op) {
@@ -149,7 +150,7 @@ switch ($op) {
     // 儲存pdf的匯出設定
     case 'eric_signup_data_pdf_setup_save':
         Eric_signup_data::pdf_setup_save($action_id, $pdf_setup_col);
-        header("location:pdf_signup.php?id=$action_id");
+        header("location:{$file}_signup.php?id=$action_id");
         // 本處需要用exit中斷執行
         exit;
 

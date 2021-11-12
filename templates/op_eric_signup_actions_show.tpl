@@ -93,13 +93,21 @@
     <div class="bar">
         <a href="javascript:del_action('<{$id}>')" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i> 刪除活動</a>
         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_actions_edit&id=<{$id}>" class="btn btn-warning"><i class="fa fa-pencil" aria-hidden="true"></i> 編輯活動</a>
-        <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>&type=signup" class="btn btn-primary"><i class="fa fa-file-o" aria-hidden="true"></i> 匯出報名名單 CSV</a>
-        <a href="<{$xoops_url}>/modules/eric_signup/excel.php?id=<{$id}>&type=signup" class="btn btn-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i> 匯出報名名單 EXCEL</a>
-        <a href="<{$xoops_url}>/modules/eric_signup/pdf.php?id=<{$id}>" class="btn btn-success"><i class="fas fa-save    "></i> 匯出報名名單 PDF</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/html.php?id=<{$action.id}>" class="btn  btn-warning"> <i class="fa fa-html5" aria-hidden="true"></i> 匯出 HTML</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_pdf_setup&id=<{$id}>" class="btn btn-info"><i class="fa fa-file-o" aria-hidden="true"></i> 產生簽到表</a>
+
+        <div class="btn-group">
+            <a href="#" class="btn btn-secondary">匯出報名名單：</a>
+            <a href="<{$xoops_url}>/modules/eric_signup/csv.php?id=<{$id}>&type=signup" class="btn btn-info"><i class="fa fa-file-o" aria-hidden="true"></i> CSV</a>
+            <a href="<{$xoops_url}>/modules/eric_signup/excel.php?id=<{$id}>&type=signup" class="btn btn-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i> EXCEL</a>
+            <a href="<{$xoops_url}>/modules/eric_signup/pdf.php?id=<{$id}>" class="btn btn-danger"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF</a>
+            <a href="<{$xoops_url}>/modules/eric_signup/word.php?id=<{$id}>" class="btn btn-primary"><i class="fa fa-file-word-o" aria-hidden="true"></i> WORD</a>
+        </div>
+
     </div>
 
     <div class="bar">
-        <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_pdf_setup&id=<{$id}>" class="btn btn-info"><i class="fa fa-file-o" aria-hidden="true"></i> 產生簽到表</a>
+
     </div>
 
     <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >

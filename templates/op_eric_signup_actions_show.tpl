@@ -99,7 +99,7 @@
     </div>
 
     <div class="bar">
-        <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_pdf_setup&id=<{$id}>" class="btn btn-info">fa-file 產生簽到表</a>
+        <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_pdf_setup&id=<{$id}>" class="btn btn-info"><i class="fa fa-file-o" aria-hidden="true"></i> 產生簽到表</a>
     </div>
 
     <form action="index.php" method="post" class="my-4" enctype="multipart/form-data" >

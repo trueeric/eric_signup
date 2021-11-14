@@ -8,8 +8,8 @@ use XoopsModules\Tadtools\Utility;
 function action_signup($options)
 {
     // 傳回id，確定過濾
-    $block           = Eric_signup_actions::get($options[0], true);
-    $block['signup'] = Eric_signup_data::get_all($options[0], null, true);
+    $block                 = Eric_signup_actions::get($options[0], true);
+    $block['signup_count'] = Eric_signup_data::get_all($options[0], null, true);
 
     // 樣板接收時一律用block
     return $block;

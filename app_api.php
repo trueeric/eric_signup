@@ -11,6 +11,10 @@ $token = Request::getString('token');
 $api = new Eric_signup_api($token);
 
 switch ($op) {
+    // 取得所有活動
+    case 'eric_signup_actions_index':
+        echo $api->eric_signup_actions_index($xoopsModuleConfig['only_enable']);
+        break;
 
     default:
         echo $api->user();

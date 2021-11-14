@@ -296,7 +296,8 @@ class Eric_signup_actions
         // 把","放在$order內的考量是萬一$order為空值時，sql不會多一個","而發生錯誤
         $sql = "select * from `" . $xoopsDB->prefix("eric_signup_actions") . "` where 1  $and_enable order by `enable` $order $limit ";
 
-        if (!$show_number) {
+        // 如果不顯示頁碼或非api模式才show出 pagebar
+        if (!$show_number && !$_SESSION['api_mode']) {
             //Utility::getPageBar($原sql語法, 每頁顯示幾筆資料, 最多顯示幾個頁數選項);
             $PageBar = Utility::getPageBar($sql, $xoopsModulesConfig['show_number'], 10);
             $bar     = $PageBar['bar'];
@@ -315,8 +316,9 @@ class Eric_signup_actions
             // $data['detial'] = $myts->displayTarea($data['detail'], 0, 1, 0, 1, 1);
             // 此處過濾setup會出問題
             // $data['setup']  = $myts->displayTarea($data['setup'], 0, 1, 0, 1, 1);
-            $data['signup'] = Eric_signup_data::get_all($data['id']);
+            $data['signup_count'] = count(Eric_signup_data::get_all($data['id']));
 
+            // $auto_key指0,1,2,3,4,5....的編碼
             if ($_SESSION['api_mode'] or $auto_key) {
                 $data_arr[] = $data;
             } else {

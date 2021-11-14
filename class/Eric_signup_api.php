@@ -1,6 +1,7 @@
 <?php
 namespace XoopsModules\Eric_signup;
 
+use XoopsModules\Eric_signup\Eric_signup_actions;
 use XoopsModules\Tadtools\SimpleRest;
 
 require dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
@@ -60,4 +61,11 @@ class Eric_signup_api extends SimpleRest
         return $jsonResponse;
     }
 
+    // 傳回目前使用者資訊
+    public function eric_signup_actions_index($only_enable = true)
+    {
+        $actions = Eric_signup_actions::get_all($only_enable);
+
+        return $this->encodeJson($actions);
+    }
 }

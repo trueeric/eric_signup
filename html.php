@@ -25,7 +25,7 @@ $content = "
         <div><i class='fa fa-calendar' aria-hidden='true'></i>活動日期 :{$action['action_date']}</div>
         <div><i class='fa fa-calendar' aria-hidden='true'></i>報名截止日期:{$action['end_date']}</div>
         <div>
-            <i class='fa fa-users' aria-hidden='true'></i>報名狀況:" . count($action['signup']) . "/{$action['number']}
+            <i class='fa fa-users' aria-hidden='true'></i>報名狀況:" . ($action['signup_conut']) . "/{$action['number']}
             <span data-toggle='tooltip' title='可侯補人數'>({$action['candidate']}) </span>
         </div>
     </small>

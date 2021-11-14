@@ -14,7 +14,7 @@
         <{foreach from=$all_data key=id item=action name=all_data}>
             <tr>
                 <td>
-                    <{if $action.enable && ($action.number + $action.candidate) > $action.signup|@count  && $action.end_date|strtotime >= $smarty.now}>
+                    <{if $action.enable && ($action.number + $action.candidate) > $action.signup_count  && $action.end_date|strtotime >= $smarty.now}>
                         <i class="fa fa-check text-success" data-toggle="tooltip" title="報名中" aria-hidden="true"></i>
                     <{else}>
                         <i class="fa fa-times text-danger" data-toggle="tooltip" title="無法報名"  aria-hidden="true"></i>
@@ -28,7 +28,7 @@
                     <{$action.end_date}>
                 </td>
                 <td>
-                    <{$action.signup|@count}>/<{$action.number}>
+                    <{$action.signup_count}>/<{$action.number}>
                     <{if $action.candidate}> <span data-toggle="tooltip" title="可侯補人數">(<{$action.candidate}>) </span><{/if}>
                 </td>
                 <td>
@@ -40,7 +40,7 @@
 
                     <{ /if}>
 
-                    <{if  $action.enable && ($action.number + $action.candidate) > $action.signup|@count && $xoops_isuser && $action.end_date|strtotime >= $smarty.now}>
+                    <{if  $action.enable && ($action.number + $action.candidate) > $action.signup_count && $xoops_isuser && $action.end_date|strtotime >= $smarty.now}>
                         <a href="<{$xoops_url}>/modules/eric_signup/index.php?op=eric_signup_data_create&action_id=<{$action.id}>" class="btn btn-sm btn-info"><i class="fa fa-plus" aria-hidden="true"></i> 立即報名</a>
                     <{else}>
                         <a href="<{$xoops_url}>/modules/eric_signup/index.php?id=<{$action.id}>" class="btn btn-sm btn-success"><i class="fa fa-file" aria-hidden="true"></i> 詳情</a>

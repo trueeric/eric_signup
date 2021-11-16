@@ -1,7 +1,7 @@
 <?php
 namespace XoopsModules\Eric_signup;
 
-use XoopsModules\Eric_signup\Eric_signup_actions;
+use XoopsModules\Eric_signup\Eric_signup_data;
 use XoopsModules\Tadtools\SimpleRest;
 
 require dirname(dirname(dirname(__DIR__))) . '/mainfile.php';
@@ -67,5 +67,14 @@ class Eric_signup_api extends SimpleRest
         $actions = Eric_signup_actions::get_all($only_enable);
 
         return $this->encodeJson($actions);
+    }
+
+    // 傳回目前活動報名者資料
+    public function eric_signup_data_index($action_id)
+    {
+        // token是老的api的方法屬性，有token才掀資料
+        $data = $this->token ? Eric_signup_data::get_all($action_id) : [];
+
+        return $this->encodeJson($data);
     }
 }

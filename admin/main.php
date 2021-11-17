@@ -26,7 +26,7 @@ switch ($op) {
     case 'eric_signup_actions_store':
         $id = Eric_signup_actions::store();
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
-        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功建立活動！");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, _MA_ERIC_SIGNUP_ACTION_CREATE_SUCCESS);
         exit;
 
     //修改用表單
@@ -39,14 +39,14 @@ switch ($op) {
     case 'eric_signup_actions_update':
         Eric_signup_actions::update($id);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
-        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, "成功修改活動！");
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, _MA_ERIC_SIGNUP_ACTION_UPDATE);
         exit;
 
     //刪除資料
     case 'eric_signup_actions_destroy':
         Eric_signup_actions::destroy($id);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
-        redirect_header($_SERVER['PHP_SELF'], 3, "成功刪除活動！");
+        redirect_header($_SERVER['PHP_SELF'], 3, _MA_ERIC_SIGNUP_ACTION_DESTROY);
         exit;
 
     default:
@@ -67,5 +67,5 @@ switch ($op) {
 $xoopsTpl->assign('now_op', $op);
 $xoTheme->addStylesheet('/modules/tadtools/css/font-awesome/css/font-awesome.css');
 $xoTheme->addStylesheet(XOOPS_URL . '/modules/tadtools/css/xoops_adm4.css');
-$xoTheme->addStylesheet(XOOPS_URL . '/modules/模組目錄/css/module.css');
+$xoTheme->addStylesheet(XOOPS_URL . '/modules/eric_signup/css/module.css');
 require_once __DIR__ . '/footer.php';

@@ -39,14 +39,14 @@ switch ($op) {
     case 'eric_signup_actions_update':
         Eric_signup_actions::update($id);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
-        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, _MA_ERIC_SIGNUP_ACTION_UPDATE);
+        redirect_header($_SERVER['PHP_SELF'] . "?id=$id", 3, _MA_ERIC_SIGNUP_ACTION_UPDATE_SUCCESS);
         exit;
 
     //刪除資料
     case 'eric_signup_actions_destroy':
         Eric_signup_actions::destroy($id);
         // header("location: {$_SERVER['PHP_SELF']}?id=$id");
-        redirect_header($_SERVER['PHP_SELF'], 3, _MA_ERIC_SIGNUP_ACTION_DESTROY);
+        redirect_header($_SERVER['PHP_SELF'], 3, _MA_ERIC_SIGNUP_ACTION_DESTROY_SUCCESS);
         exit;
 
     default:

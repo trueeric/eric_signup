@@ -32,9 +32,9 @@ class Eric_signup_api extends SimpleRest
             }
 
             // 判斷有無XXX的權限
-            // if (!isset($this->user['權限名'])) {
-            //     $_SESSION['權限名'] = $this->user['權限名'] = $this->powerChk('eric_signup', 權限編號);
-            // }
+            if (!isset($this->user['can_add'])) {
+                $_SESSION['can_add'] = $this->user['can_add'] = $this->powerChk('eric_signup', '1');
+            }
 
         }
     }
@@ -72,8 +72,9 @@ class Eric_signup_api extends SimpleRest
     // 傳回目前活動報名者資料
     public function eric_signup_data_index($action_id)
     {
+        $action = Eric_signup_actions::get($action_id);
         // token是老的api的方法屬性，有token才掀資料
-        $data = $this->token ? Eric_signup_data::get_all($action_id) : [];
+        $data = ($this->user['tad_signup_adm'] || $this->user['can_add'] && $action['uid'] == $this->uid) ? Eric_signup_data::get_all($action_id) : [];
 
         return $this->encodeJson($data);
     }

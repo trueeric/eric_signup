@@ -9,7 +9,7 @@ function action_signup($options)
 {
     // 傳回id，確定過濾
     $block                 = Eric_signup_actions::get($options[0], true);
-    $block['signup_count'] = Eric_signup_data::get_all($options[0], null, true);
+    $block['signup_count'] = count(Eric_signup_data::get_all($options[0], null, true));
 
     // 樣板接收時一律用block
     return $block;
@@ -28,7 +28,7 @@ function action_signup_edit($options)
     $form = "
     <ol class='my-form'>
         <li class='my-row'>
-            <lable class='my-label'>" . _MI_ERIC_SIGNUP_ACTION_FOCUS_OPTION . "</lable>
+            <lable class='my-label'>" . _MB_ERIC_SIGNUP_ACTION_FOCUS_OPTION . "</lable>
             <div class='my-content'>
                 <select name='options[0]' class='my-input'>
                     $opt

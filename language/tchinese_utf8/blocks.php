@@ -20,3 +20,7 @@ define('_MB_ERIC_SIGNUP_ACTION_ENROLLED', '，已報名');
 define('_MB_ERIC_SIGNUP_ACTION_UNABLE_TO_ENROLL', '無法報名');
 
 // templates\blocks\action_signup.tpl
+define('_MB_ERIC_SIGNUP_ACTION_DATE', '活動日期');
+define('_MB_ERIC_SIGNUP_ACTION_END_DATE', '報名截止日期');
+define('_MB_ERIC_SIGNUP_ACTION_STATUS', '報名狀況');
+define('_MB_ERIC_SIGNUP_ACTION_SIGNUP_NOW', '立即報名');

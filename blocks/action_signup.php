@@ -28,7 +28,7 @@ function action_signup_edit($options)
     $form = "
     <ol class='my-form'>
         <li class='my-row'>
-            <lable class='my-label'>請選擇一個活動</lable>
+            <lable class='my-label'>" . _MI_ERIC_SIGNUP_ACTION_FOCUS_OPTION . "</lable>
             <div class='my-content'>
                 <select name='options[0]' class='my-input'>
                     $opt

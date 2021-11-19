@@ -4,15 +4,15 @@
             <span class="badge badge-info">
                 <{$action.action_date|substr:0:-3}>
                 <small>
-                    名額<{$action.number}>人，已報名<{$action.signup_count}>人
-                    <{if $action.candidate}> <span data-toggle="tooltip" title="可侯補人數">(<{$action.candidate}>) </span><{/if}>
+                    <{$smarty.const._MB_ERIC_SIGNUP_ACTION_QUOTA}><{$action.number}> <{$smarty.const._MB_ERIC_SIGNUP_ACTION_PEOPLE}> <{$smarty.const._MB_ERIC_SIGNUP_ACTION_ENROLLED}><{$action.signup_count}> <{$smarty.const._MB_ERIC_SIGNUP_ACTION_PEOPLE}>
+                    <{if $action.candidate}> <span data-toggle="tooltip" title= "<{$smarty.const._MB_ERIC_SIGNUP_ACTION_NUMBER_OF_AVAILABLE CANDIDATES}>" >(<{$action.candidate}>) </span><{/if}>
                 </small>
             </span>
             <div>
                 <{if $action.enable &&($action.number + $action.candidate) > $action.signup_count  && $action.end_date|strtotime >= $smarty.now}>
-                    <i class="fa fa-check text-success" data-toggle="tooltip" title="報名中" aria-hidden="true"></i>
+                    <i class="fa fa-check text-success" data-toggle="tooltip" title="<{$smarty.const._MB_ERIC_SIGNUP_ACTION_ENROLLED}>" aria-hidden="true"></i>
                 <{else}>
-                    <i class="fa fa-times text-danger" data-toggle="tooltip" title="無法報名"  aria-hidden="true"></i>
+                    <i class="fa fa-times text-danger" data-toggle="tooltip" title="<{$smarty.const._MB_ERIC_SIGNUP_ACTION_UNABLE_TO_ENROLL}>" aria-hidden="true"></i>
                 <{ /if}>
                 <a href="<{$xoops_url}>/modules/eric_signup/index.php?id=<{$action.id}>"><{$action.title}></a>
         </div>
